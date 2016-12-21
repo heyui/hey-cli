@@ -24,7 +24,7 @@ npm install -g hey-cli
 	  "publicPath": "/", 
 
 	  "output": {
-	  	//输出哪些文件，主要是html，默认会加载和html文件名一直的js文件为入口。支持定义公用包。
+	  	//输出哪些文件，主要是html，默认会加载和html文件名一样的js文件为入口。支持定义公用包。
 	    "./*.html": {
 	      "commons": [
 	        "common"
