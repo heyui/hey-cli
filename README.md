@@ -13,7 +13,7 @@ npm install -g hey-cli
 
 ## 配置
 
-```json
+```javascript
 "hey": {
 	//端口号
 	"port": 9002,
