@@ -27,7 +27,7 @@ class Utils {
         switch (target) {
         case 'dev':
             var isDebug = true;
-            pack_config.devtool = '#eval-source-map';
+            pack_config.devtool = '#eval';
 
             var conf = config.getConfig();
             if (conf.mock === true) {
@@ -222,8 +222,7 @@ class Utils {
         });
         pack_config.vue = {
             loaders: {
-                js: `babel-loader?${babel(isDebug)}`,
-                html:`vue-html-loader?minimize=false`
+                js: `babel-loader?${babel(isDebug)}`
             }
         };
         

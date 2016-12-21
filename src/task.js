@@ -21,7 +21,7 @@ module.exports = {
 
         var pack_config = config.pack_config;
         // pack_config.entry = { app: [ '/Users/alicia/Documents/develop/mytest/build/dev-client', '/Users/alicia/Documents/develop/mytest/src/main.js' ] };
-        console.log(pack_config);
+        // console.log(pack_config);
         var compiler = webpack(pack_config);
         var WebpackDevServer = require('webpack-dev-server');
         var serverCfg = {
