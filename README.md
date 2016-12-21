@@ -60,7 +60,7 @@ npm install -g hey-cli
 	  },
 	  "devServer": {      //定义反向代理服务器
 	    "proxy": {
-	      "/api": {		  //设定/api开头的url向定义的接口请求，可以配置pathRewrite，具体请前往[Document](https://webpack.github.io/docs/webpack-dev-server.html#rewriting-urls-of-proxy-request)
+	      "/api": {		  //设定/api开头的url向定义的接口请求
 	        "target": "http://yoda:9000"
 	      }
 	    }
@@ -73,6 +73,8 @@ npm install -g hey-cli
 	]
 }
 ```
+
+反向代理可以配置pathRewrite，具体请前往[Document](https://webpack.github.io/docs/webpack-dev-server.html#rewriting-urls-of-proxy-request)
 
 
 ## 执行
