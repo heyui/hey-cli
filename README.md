@@ -15,17 +15,25 @@ npm install -g hey-cli
 
 ```json
 "hey": {
-	"port": 9002,        //端口号
+	//端口号
+	"port": 9002,
+
+	//webpack相关配置    
 	"webpack": {
-	  "publicPath": "/", //公开path
+	  //公开path
+	  "publicPath": "/", 
+
 	  "output": {
-	    "./*.html": {    //输出哪些文件，主要是html，默认会加载和html文件名一直的js文件为入口。支持定义公用包。
+	  	//输出哪些文件，主要是html，默认会加载和html文件名一直的js文件为入口。支持定义公用包。
+	    "./*.html": {
 	      "commons": [
 	        "common"
 	      ]
 	    }
 	  },
-	  "commonTrunk": {   //公共包定义，可以定义多个
+
+	  //公共包定义，可以定义多个
+	  "commonTrunk": {
 	    "common": [
 	      "jquery",
 	      "vue",
@@ -44,10 +52,14 @@ npm install -g hey-cli
 	      "jsoneditor"
 	    ]
 	  },
-	  "resolve": {       //定义假名
+
+	  //定义假名
+	  "resolve": {
 	    "alias": {}
 	  },
-	  "global": {        //定义全局变量
+
+	  //定义全局变量
+	  "global": {
 	    "Vue": "vue",
 	    "$": "jquery",
 	    "log": "./js/common/log",
@@ -58,15 +70,20 @@ npm install -g hey-cli
 	    "Plugin": "./js/plugin/plugin.js",
 	    "Qiniu": "./js/plugin/uploader/qiniu"
 	  },
-	  "devServer": {      //定义反向代理服务器
+
+	  //定义反向代理服务器
+	  "devServer": {
 	    "proxy": {
-	      "/api": {		  //设定/api开头的url向定义的接口请求
+	      //设定/api开头的url向定义的接口请求
+	      "/api": {
 	        "target": "http://yoda:9000"
 	      }
 	    }
 	  }
 	},
-	"copy": [             //未做关联引用的文件在build的时候复制到打包的文件夹中
+
+	//未做关联引用的文件在build的时候复制到打包的文件夹中
+	"copy": [
 	  "./images/**/*",
 	  "./help/**/*",
 	  "./template/**/*"
