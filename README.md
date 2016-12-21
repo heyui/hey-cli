@@ -1,7 +1,7 @@
 # hey-cli
 webpack脚手架，hot-dev-server，build。
 主要使用package.json文件配置，支持vue2.0。  
-vue1.0请前往[kil](https://github.com/lovelypig5/kil)。  
+vue1.0的脚手架请前往[lovelypig5/kil](https://github.com/lovelypig5/kil)。  
 不需要理解webpack，只需要知道如何配置就可以使用。  
 支持es6，热替换，反向代理。  
 
