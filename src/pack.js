@@ -20,7 +20,7 @@ paths.length -= 1;
 module.exports = {
     entry: ['./index'],
     output: {
-        path: `${process.cwd()}/dist`,
+        path: `${process.cwd()}/dist/`,
         publicPath: '/dist/'
     },
     module: {
@@ -42,6 +42,8 @@ module.exports = {
         }]
     },
     resolve: {
+        extensions: ['', '.js', '.vue', '.json'],
+        alias: {'vue$': 'vue/dist/vue.common.js'},
         root: [
             // project node modules
             path.join(process.cwd(), 'node_modules'),
@@ -50,7 +52,7 @@ module.exports = {
             // all global node modules
             path.join(paths.join(path.sep), 'node_modules')
         ],
-        fallback: path.join(__dirname,"..", "node_modules")
+        fallback: [path.join(__dirname, '../node_modules')]
     },
     resolveLoader: {
         root: [
@@ -58,7 +60,7 @@ module.exports = {
             path.join(process.cwd(), 'node_modules'),
             path.join(paths.join(path.sep), 'node_modules')
         ],
-        fallback: path.join(__dirname,"..", "node_modules")
+        fallback: [path.join(__dirname, '../node_modules')]
     },
     /**
      * plugins to hot reload source file

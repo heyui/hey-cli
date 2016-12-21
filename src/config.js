@@ -78,7 +78,7 @@ class Config {
         var pack = conf.webpack || {};
         pack.entry = {};
         pack.plugins = [];
-
+        pack.root = pack.root||"dist";
         let comObj = {}
         // check relationship between chunk and common
         if (pack.commonTrunk) {

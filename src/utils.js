@@ -1,13 +1,14 @@
 'use strict';
 var os = require('os');  
 
+var pack_default = require('./pack');
+var babel = require('./babel');
+var config = require('./config');
 var path = require('path'),
     fs = require('fs'),
     logger = require('./logger'),
     webpack = require('webpack'),
-    ExtractTextPlugin = require('extract-text-webpack-plugin'),
-    config = require('./config'),
-    babel = require('./babel');
+    ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 class Utils {
 
@@ -18,11 +19,15 @@ class Utils {
      * @return config
      */
     loadWebpackCfg(target, args) {
+
+        var sysConfig = config.loadPackageConfig(args);
+
+        var pack_config = this.mergeConfig(sysConfig.webpack,target);
+
         switch (target) {
         case 'dev':
             var isDebug = true;
-            var pack_config = this.mergeConfig(args, isDebug);
-            pack_config.devtool = '#eval';
+            pack_config.devtool = '#eval-source-map';
 
             var conf = config.getConfig();
             if (conf.mock === true) {
@@ -80,12 +85,10 @@ class Utils {
             logger.debug('dev server start with webpack config: ');
             logger.debug(pack_config);
 
-            return pack_config;
+            return {sysConfig:sysConfig,pack_config:pack_config};
         case 'release':
-        console.log(args.sourcemap);
             var sourcemap = !!args.sourcemap ? "?source-map" : "";
 
-            var pack_config = this.mergeConfig(args);
             if (args.sourcemap) {
                 pack_config.devtool = '#source-map';
             } else {
@@ -122,7 +125,7 @@ class Utils {
             logger.debug('hey release with webpack config: ');
             logger.debug(pack_config);
 
-            return pack_config;
+            return {sysConfig:sysConfig,pack_config:pack_config};
         default:
             break;
         }
@@ -166,93 +169,84 @@ class Utils {
      * @param  {Boolean} isDebug : is debug mode, add dev-sever entry or not
      * @return {[Object]}
      */
-    mergeConfig(args, isDebug) {
-        var pack_def = require('./pack');
-        var sysCfg = config.loadPackageConfig(args);
-        var pack;
-
-        var conf = sysCfg.webpack;
+    mergeConfig(conf, target) {
+        var isDebug = target ==='dev';
         var pack = {
             entry: conf.entry || 'main',
             plugins: conf.plugins,
             devServer: conf.devServer,
             resolve: conf.resolve,
             output: {
-                publicPath: conf.publicPath
+                publicPath: conf.publicPath,
+                path:`${process.cwd()}/${conf.root}/`
             }
         }
 
-        if (!pack) {
-            return pack_def;
+        var pack_config = pack;
+        if (!pack.entry) {
+            pack_config.entry = pack_default.entry;
+        }
+        pack_config.entry = this.parseEntry(pack_config.entry, isDebug);
+        // use hey default webpack config, for build use
+        // var publicPath = pack_config.output && pack_config.output.publicPath;
+        // pack_config.output = pack_default.output;
+        // if (publicPath) {
+        //     pack_config.output.publicPath = publicPath;
+        // }
+
+        // hash control, add hash when release
+        let hash = '';
+        if (!isDebug) {
+            hash = '.[hash]';
+        }
+        pack_config.output.filename = `[name]${hash}.js`;
+        pack_config.output.chunkFilename = `[id]${hash}.js`;
+
+        if (pack_config.module && pack_config.module.loaders) {
+            Array.prototype.push.apply(pack_default.module.loaders, pack_config.module.loaders);
         } else {
-            var pack_config = pack;
-            if (!pack.entry) {
-                pack_config.entry = pack_def.entry;
-            }
-            pack_config.entry = this.parseEntry(pack_config.entry, isDebug);
-            // use hey default webpack config, for build use
-            var publicPath = pack_config.output && pack_config.output.publicPath;
-            pack_config.output = pack_def.output;
-            if (publicPath) {
-                pack_config.output.publicPath = publicPath;
-            }
-
-            // hash control, add hash when release
-            let hash = '';
-            if (!isDebug) {
-                hash = '.[hash]';
-            }
-            pack_config.output.filename = `[name]${hash}.js`;
-            pack_config.output.chunkFilename = `[id]${hash}.js`;
-
-            if (pack_config.module && pack_config.module.loaders) {
-                Array.prototype.push.apply(pack_def.module.loaders, pack_config.module.loaders);
-            } else {
-                pack_config.module = {};
-            }
-            pack_config.module.loaders = pack_def.module.loaders;
-            pack_config.module.loaders.push({
-                test: /\.jsx?$/,
-                exclude: /(node_modules|bower_components)/,
-                loaders: [`babel-loader?${babel(isDebug)}`]
-            });
-
-            // config loader for vue
-            pack_config.module.loaders.push({
-                test: /\.vue$/,
-                exclude: /(node_modules|bower_components)/,
-                loaders: ['vue-loader?${babel(isDebug)']
-            });
-            pack_config.vue = {
-                loaders: {
-                    js: `babel-loader?${babel(isDebug)}`,
-                    html:`vue-html-loader?minimize=false`
-                }
-            };
-            if (pack_config.resolve) {
-                pack_config.resolve = pack_def.resolve;
-            } else {
-                pack_config.resolve = pack_def.resolve;
-            }
-            pack_config.resolveLoader = pack.resolveLoader || pack_def.resolveLoader;
-
-            if (pack_config.plugins) {
-                Array.prototype.push.apply(pack_def.plugins, pack_config.plugins);
-            }
-            pack_config.plugins = pack_def.plugins;
-
-            if (pack_config.externals) {
-                Array.prototype.push.apply(pack_def.externals, pack_config.externals);
-            }
-
-            pack_config.externals = pack_def.externals;
-            pack_config.postcss = pack_def.postcss;
-            if (pack.devServer) {
-                pack_config.devServer = pack.devServer;
-            }
-
-            return pack_config;
+            pack_config.module = {};
         }
+        pack_config.module.loaders = pack_default.module.loaders;
+        pack_config.module.loaders.push({
+            test: /\.jsx?$/,
+            exclude: /(node_modules|bower_components)/,
+            loaders: [`babel-loader?${babel(isDebug)}`]
+        });
+
+        // config loader for vue
+        pack_config.module.loaders.push({
+            test: /\.vue$/,
+            exclude: /(node_modules|bower_components)/,
+            loaders: ['vue-loader?${babel(isDebug)']
+        });
+        pack_config.vue = {
+            loaders: {
+                js: `babel-loader?${babel(isDebug)}`,
+                html:`vue-html-loader?minimize=false`
+            }
+        };
+        
+        pack_config.resolve = pack_default.resolve;
+
+        pack_config.resolveLoader = pack.resolveLoader || pack_default.resolveLoader;
+
+        if (pack_config.plugins) {
+            Array.prototype.push.apply(pack_default.plugins, pack_config.plugins);
+        }
+        pack_config.plugins = pack_default.plugins;
+
+        if (pack_config.externals) {
+            Array.prototype.push.apply(pack_default.externals, pack_config.externals);
+        }
+
+        pack_config.externals = pack_default.externals;
+        pack_config.postcss = pack_default.postcss;
+        if (pack.devServer) {
+            pack_config.devServer = pack.devServer;
+        }
+
+        return pack_config;
     }
 
 }
