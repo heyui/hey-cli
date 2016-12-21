@@ -1,6 +1,6 @@
 {
   "name": "hey-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "webpack脚手架，hot-dev-server，build",
   "keywords": "webpack, hot-dev-server, frontend, web, build",
   "main": "index.js",
@@ -59,6 +59,7 @@
     "vue-html-loader": "^1.1.0",
     "vue-loader": "^10.0.2",
     "vue-style-loader": "^1.0.0",
+    "vue-template-compiler": "^2.1.6",
     "webpack": "^1.12.10",
     "webpack-dev-server": "^1.14.1"
   },
