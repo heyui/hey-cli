@@ -14,6 +14,7 @@ npm install -g hey-cli
 ## 配置
 
 在package.json中添加属性：
+注：下面的配置请清除注释，json文件没有办法添加注释。
 
 ```javascript
 "hey": {

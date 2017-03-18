@@ -75,6 +75,9 @@ class Config {
         conf.react = !!conf.react;
         conf.html5Mode = !!conf.html5Mode;
 
+        if(conf.webpack == undefined){
+            logger.warn('no webpack config hey=>webpack');
+        }
         var pack = conf.webpack || {};
         pack.entry = {};
         pack.plugins = [];

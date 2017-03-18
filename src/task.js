@@ -36,22 +36,14 @@ module.exports = {
         if (pack_config.html5Mode) {
             serverCfg.historyApiFallback = true;
         }
-        if (pack_config.devServer && pack_config.devServer.proxy) {
-            var _proxy = pack_config.devServer.proxy;
-            serverCfg.proxy = {};
-            for(var key of Object.keys(_proxy)){
-                var proxyConfig = _proxy[key];
-                if(typeof(proxyConfig)=="object"){
-                    proxyConfig.toProxy = true;
-                    proxyConfig.changeOrigin = true;
-                }
-                serverCfg.proxy[key] = proxyConfig;
+        if (pack_config.devServer) {
+            for(var key in pack_config.devServer){
+                serverCfg[key] = pack_config.devServer;
             }
         }
 
         logger.debug('webpack dev server start with config: ');
         logger.debug(serverCfg);
-
         new WebpackDevServer(compiler, serverCfg).listen(config.sysConfig.port, '0.0.0.0', (err) => {
             if (err) {
                 logger.error(err);

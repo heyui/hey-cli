@@ -26,10 +26,10 @@ module.exports = {
     module: {
         loaders: [{
             test: /\.(eot|svg|ttf|woff|woff2)/i,
-            loader: "url?limit=2048&name=[path][name].[ext]"
+            loader: "url?limit=2048&name=[path][name].[hash].[ext]"
         }, {
             test: /\.(png|jpe?g|gif)$/i,
-            loader: "url?limit=8192&name=[path][name].[ext]!img?minimize&progressive=true"
+            loader: "url?limit=8192&name=[path][name].[hash].[ext]!img?minimize&progressive=true"
         }, {
             test: /\.json$/,
             loaders: ['json']
@@ -43,7 +43,6 @@ module.exports = {
     },
     resolve: {
         extensions: ['', '.js', '.vue', '.json'],
-        alias: {'vue$': 'vue/dist/vue.common.js'},
         root: [
             // project node modules
             path.join(process.cwd(), 'node_modules'),
