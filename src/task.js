@@ -1,15 +1,7 @@
 'use strict';
-
-var spawn = require('cross-spawn'),
-    fs = require('fs-extra'),
-    path = require('path'),
-    glob = require('glob'),
-    utils = require('./utils'),
-    logger = require('./logger');
-
+var generatorConfig = require('./config');
+var logger = require('./logger');
 var webpack = require('webpack');
-// 加载编码转换模块  
-// var iconv = require('iconv-lite'); 
 
 module.exports = {
     /**
@@ -17,19 +9,16 @@ module.exports = {
      * @return {[type]} [description]
      */
     dev: function(args) {
-        var config = utils.loadWebpackCfg('dev', args);
+        var config = generatorConfig('dev', args);
 
-        var pack_config = config.pack_config;
-        // pack_config.entry = { app: [ '/Users/alicia/Documents/develop/mytest/build/dev-client', '/Users/alicia/Documents/develop/mytest/src/main.js' ] };
-        // console.log(pack_config);
-        var compiler = null;
-        logger.info(pack_config);
+        var webpack_config = config.webpack;
+
         try{
-            compiler = webpack(pack_config);
+            var compiler = webpack(webpack_config);
         }catch(e){
-            logger.info(e);
-            return false;
+            logger.error(e);
         }
+
         var WebpackDevServer = require('webpack-dev-server');
         var serverCfg = {
             hot: true,
@@ -40,25 +29,23 @@ module.exports = {
                 colors: true
             }
         }
-        if (pack_config.html5Mode) {
-            serverCfg.historyApiFallback = true;
-        }
-        if (pack_config.devServer) {
-            for(var key in pack_config.devServer){
-                serverCfg[key] = pack_config.devServer;
+        var devServer = config.config.webpack.devServer;
+        if (devServer) {
+            for(var key in devServer){
+                serverCfg[key] = devServer[key];
             }
         }
+        // logger.info(serverCfg);
 
         logger.debug('webpack dev server start with config: ');
-        logger.debug(serverCfg);
-        new WebpackDevServer(compiler, serverCfg).listen(config.sysConfig.port, '0.0.0.0', (err) => {
+        new WebpackDevServer(compiler, serverCfg).listen(config.config.port, '0.0.0.0', (err) => {
             if (err) {
                 logger.error(err);
                 process.exit(1);
             }
 
             logger.info('----------------------------------');
-            logger.info(`Server listening at localhost:${config.sysConfig.port}`);
+            logger.info(`Server listening at localhost:${config.config.port}`);
             logger.info('----------------------------------');
         });
     },
@@ -67,10 +54,9 @@ module.exports = {
      * @return {[type]} [description]
      */
     build: function(args, after) {
-        var config = utils.loadWebpackCfg('release', args);
-
+        var config = generatorConfig('release', args);
         logger.info('start build project... ');
-        var compiler = webpack(config.pack_config);
+        var compiler = webpack(config.webpack);
         compiler.run((err, stats) => {
             if (err) {
                 logger.error(err);
@@ -83,6 +69,8 @@ module.exports = {
                 logger.warn(jsonStats.warnings);
             }
 
+            logger.info('build complete. ');
+            logger.info('start copying. ');
             var conf = config.sysConfig;
             if (conf.copy && conf.copy.length > 0) {
                 conf.copy.forEach((key) => {
@@ -92,7 +80,7 @@ module.exports = {
                     })
                 })
             }
-
+            logger.info('copy complete. ');
             logger.info('build successfully. ');
 
             if (after && typeof after === "function") {
