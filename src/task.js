@@ -22,7 +22,14 @@ module.exports = {
         var pack_config = config.pack_config;
         // pack_config.entry = { app: [ '/Users/alicia/Documents/develop/mytest/build/dev-client', '/Users/alicia/Documents/develop/mytest/src/main.js' ] };
         // console.log(pack_config);
-        var compiler = webpack(pack_config);
+        var compiler = null;
+        logger.info(pack_config);
+        try{
+            compiler = webpack(pack_config);
+        }catch(e){
+            logger.info(e);
+            return false;
+        }
         var WebpackDevServer = require('webpack-dev-server');
         var serverCfg = {
             hot: true,
