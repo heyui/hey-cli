@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "autoprefixer": "6.3.3",
+    "autoprefixer": "^6.3.3",
     "babel-core": "^6.3.26",
     "babel-helper-vue-jsx-merge-props": "^2.0.2",
     "babel-loader": "^6.2.0",
@@ -51,7 +51,7 @@
     "less-loader": "^2.2.2",
     "log4js": "^0.6.31",
     "postcss-cssnext": "^2.10.0",
-    "postcss-loader": "^0.8.0",
+    "postcss-loader": "^0.8.2",
     "react-transform-hmr": "^1.0.1",
     "rimraf": "^2.5.1",
     "style-loader": "^0.13.0",
