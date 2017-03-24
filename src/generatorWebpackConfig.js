@@ -9,6 +9,7 @@ var path = require('path'),
   ExtractTextPlugin = require('extract-text-webpack-plugin');
 getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+
 /**
  * only given props will be used
  *     entry
@@ -35,7 +36,7 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
   //   sourceMaps: isDebug ? 'both' : false,
   //   presets: []
   // }, , conf.babel);
-var babelOptions = getbabelConfig(fullConf, isDebug);
+  var babelOptions = getbabelConfig(fullConf, isDebug);
   // var useBabelRc = babelOptions.babelrc && fs.existsSync('.babelrc')
   // if (useBabelRc) {
   //   logger.debug('> Using .babelrc in current working directory')
@@ -44,12 +45,16 @@ var babelOptions = getbabelConfig(fullConf, isDebug);
   //   babelOptions.presets.push(require.resolve('babel-preset-vue-app'))
   // }
 
+
+  const extractCSS = new ExtractTextPlugin('stylesheets/[name]-one.css');
+  const extractLESS = new ExtractTextPlugin('stylesheets/[name]-two.css');
+
   var webpackconf = {
     entry: {},
     output: {
       path: `${process.cwd()}/${conf.root}/`,
-      filename: '[name].js',
-      publicPath: `/${conf.root}`
+      filename: '[name].[hash:7].js',
+      publicPath: `${conf.publicPath}`
     },
     module: {
       rules: [{
@@ -66,31 +71,8 @@ var babelOptions = getbabelConfig(fullConf, isDebug);
         test: /\.tpl?$/,
         loader: 'ejs-loader'
       }, {
-        test: /\.css$/,
-        use: [{
-          loader: 'style-loader'
-        }, {
-          loader: 'css-loader',
-          options: {
-            sourceMap: isDebug
-          }
-        }]
-      }, {
-        test: /\.less$/,
-        exclude: /(node_modules|bower_components)/,
-        use: [{
-          loader: 'style-loader'
-        }, {
-          loader: 'css-loader',
-          options: {
-            sourceMap: isDebug
-          }
-        }, {
-          loader: 'less-loader',
-          options: {
-            sourceMap: isDebug
-          }
-        }]
+        test: /\.json$/,
+        loader: 'json-loader',
       }, {
         test: /\.(jsx|js)?$/,
         exclude: /(node_modules|bower_components)/,
@@ -98,19 +80,10 @@ var babelOptions = getbabelConfig(fullConf, isDebug);
           loader: 'babel-loader',
           options: babelOptions
         }]
-      }, {
-        test: /\.vue$/,
-        exclude: /(node_modules|bower_components)/,
-        use: [{
-          loader: 'vue-loader'
-        }]
       }]
     },
     resolve: {
       extensions: ['.js', '.vue', '.json'],
-      alias:{
-        'vue$': 'vue/dist/vue.js',
-      },
       modules: [
         // project node modules
         path.join(process.cwd(), 'node_modules'),
@@ -138,7 +111,11 @@ var babelOptions = getbabelConfig(fullConf, isDebug);
     plugins: [
       new webpack.LoaderOptionsPlugin({
         options: {
+          minimize: !isDebug,
           debug: isDebug,
+          options: {
+            sourceMap: isDebug
+          },
           context: process.cwd(),
           postcss: postcssOptions,
           babel: babelOptions
@@ -151,8 +128,75 @@ var babelOptions = getbabelConfig(fullConf, isDebug);
         }
       })
     ],
-    externals: []
+    externals: fullConf.webpack.externals
   };
+
+  logger.info((isDebug ? '"development"' : '"production"'));
+
+  if (isDebug) {
+    webpackconf.module.rules.push({
+      test: /\.css$/,
+      use: [{
+        loader: 'style-loader'
+      }, {
+        loader: 'css-loader',
+        options: {
+          modules: true
+        }
+      }]
+    }, {
+      test: /\.less$/,
+      exclude: /(node_modules|bower_components)/,
+      use: [{
+        loader: 'style-loader'
+      }, {
+        loader: 'css-loader'
+      }, {
+        loader: 'less-loader'
+      }]
+    }, {
+      test: /\.vue$/,
+      exclude: /(node_modules|bower_components)/,
+      use: [{
+        loader: 'vue-loader'
+      }]
+    });
+  } else {
+
+    const extractCSS = new ExtractTextPlugin({
+      filename: "[name].[hash].css"
+    });
+
+    webpackconf.module.rules.push({
+      test: /\.css$/,
+      use: extractCSS.extract(['css-loader', 'postcss-loader'])
+    }, {
+      test: /\.less$/,
+      exclude: /(node_modules|bower_components)/,
+      use: extractCSS.extract(['css-loader', 'less-loader'])
+    }, {
+      test: /\.vue$/,
+      loader: 'vue-loader',
+      options: {
+        loaders: {
+          css: ExtractTextPlugin.extract({
+            use: 'css-loader',
+            fallback: 'vue-style-loader'
+          }),
+          less: ExtractTextPlugin.extract({
+            use: ['css-loader', 'less-loader'],
+            fallback: 'vue-style-loader'
+          })
+        },
+        postLoaders: {
+          html: 'babel-loader'
+        },
+        postcss: [require('postcss-cssnext')()]
+      }
+    });
+
+    webpackconf.plugins.push(extractCSS);
+  }
 
   return webpackconf;
 };
@@ -273,17 +317,17 @@ module.exports = function(conf, isDebug) {
     }
     genWebpack.output.publicPath = `http://${IPv4}:${conf.port}/`;
   } else {
-    pack_config.plugins.push(new ExtractTextPlugin({
-      filename: "[name].[hash].css"
-    }));
-    if (args.uglify) {
-      pack_config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    genWebpack.plugins.push(new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false
+        },
         sourceMap: false
-      }));
-    }
+      }),
+      new webpack.optimize.OccurrenceOrderPlugin()
+    );
   }
   logger.info('server start with webpack config: ');
-  // logger.info(genWebpack);
+  logger.info(genWebpack);
   // logger.info(genWebpack.module.rules);
   return genWebpack;
 }

@@ -18,7 +18,8 @@ module.exports = {
             "proxy": {
                 "/test_/?*": "please change or remove this as you need"
             }
-        }
+        },
+        "externals":[]
     },
     "copy": []
 }

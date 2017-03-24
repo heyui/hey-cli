@@ -71,7 +71,7 @@ module.exports = {
 
             logger.info('build complete. ');
             logger.info('start copying. ');
-            var conf = config.sysConfig;
+            var conf = config.config;
             if (conf.copy && conf.copy.length > 0) {
                 conf.copy.forEach((key) => {
                     let files = glob.sync(key);
