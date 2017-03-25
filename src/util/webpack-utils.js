@@ -8,23 +8,10 @@ exports.cssLoaders = function(options) {
   var cssLoader = {
     loader: 'css-loader',
     options: {
-      importLoaders: 1,
       minimize: options.extract,
       sourceMap: options.sourceMap
     }
   }
-
-  var postcssLoader = {
-    loader: "postcss-loader",
-    options: {
-      plugins: function (){
-        return [
-          require('precss'),
-          require('autoprefixer')
-        ];
-      }
-    }
-  };
 
   // generate loader string to be used with extract text plugin
   function generateLoaders(loader, loaderOptions) {

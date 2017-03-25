@@ -2,6 +2,9 @@
 var generatorConfig = require('./config');
 var logger = require('./logger');
 var webpack = require('webpack');
+var glob = require('glob');
+var fs = require('fs-extra');
+
 
 module.exports = {
     /**
@@ -75,6 +78,7 @@ module.exports = {
             if (conf.copy && conf.copy.length > 0) {
                 conf.copy.forEach((key) => {
                     let files = glob.sync(key);
+                    logger.info(conf.root);
                     files.forEach((file) => {
                         fs.copySync(file, `${conf.root}/${file}`);
                     })

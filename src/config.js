@@ -49,6 +49,7 @@ function getConfig(args) {
 module.exports = function(type, args) {
   var isDebug = type == 'dev';
   var config = getConfig(args);
+  config.root = config.webpack.root;
   var webpackConf = generatorWebpackConfig(config, isDebug);
   return {config:config,webpack:webpackConf};
 };
