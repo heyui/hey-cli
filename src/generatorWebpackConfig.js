@@ -25,47 +25,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
  */
 
 const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
-  // logger.info(fullConf);
-  // var postcssOptions = {
-  //   plugins: [
-  //     require('autoprefixer')
-  //   ]
-  // };
-  var postcssLoader = {
-    loader: "postcss-loader",
-    options: {
-      plugins: [
-        require('autoprefixer')
-      ],
-      sourceMap: isDebug
-    }
-  };
 
-  var vueLoaderConfig = {
-    loaders: webpackUtils.cssLoaders({
-      sourceMap: isDebug,
-      extract: !isDebug
-    })
-  };
-
-  // var babelOptions = Object.assign({
-  //   babelrc: false,
-  //   cacheDirectory: true,
-  //   sourceMaps: isDebug ? 'both' : false,
-  //   presets: []
-  // }, , conf.babel);
   var babelOptions = getbabelConfig(fullConf, isDebug);
-  // var useBabelRc = babelOptions.babelrc && fs.existsSync('.babelrc')
-  // if (useBabelRc) {
-  //   logger.debug('> Using .babelrc in current working directory')
-  // } else {
-  //   babelOptions.babelrc = false
-  //   babelOptions.presets.push(require.resolve('babel-preset-vue-app'))
-  // }
-
-
-  // var extractCSS = new ExtractTextPlugin('stylesheets/[name]-one.css');
-  // var extractLESS = new ExtractTextPlugin('stylesheets/[name]-two.css');
 
   var webpackconf = {
     entry: {},
@@ -85,7 +46,13 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
       }, {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: vueLoaderConfig
+        options: {
+          loaders: webpackUtils.cssLoaders({
+            sourceMap: isDebug,
+            extract: !isDebug,
+            from: 'vue'
+          })
+        }
       },{
         test: /\.html?$/,
         loader: 'html-loader'
@@ -129,21 +96,17 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
         path.join(paths.join(path.sep), 'node_modules')
       ]
     },
-    /**
-     * plugins to hot reload source file
-     * @type {Array}
-     */
-    devtool: (isDebug ? '#eval' : '#cheap-source-map'),
+    devtool: (isDebug ? '#eval' : false),
     plugins: [
       new webpack.LoaderOptionsPlugin({
         options: {
           minimize: !isDebug,
           debug: isDebug,
-          options: {
-            sourceMap: isDebug
-          },
           context: process.cwd(),
-          babel: babelOptions
+          babel: babelOptions,
+          postcss: [
+              require('autoprefixer')
+          ]
         }
       }),
       new webpack.DefinePlugin({
@@ -156,9 +119,6 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
     externals: fullConf.webpack.externals
   };
 
-  // var extractCSS = null;
-
-
   let stylels = webpackUtils.styleLoaders({
     sourceMap: isDebug,
     extract: !isDebug
@@ -169,101 +129,26 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
   }
 
   if (isDebug) {
-
-
-
-    // let stylels = utils.styleLoaders({ sourceMap: config.dev.cssSourceMap });
-
-    // for (var i = 0; i < stylels.length; i++) {
-    //   webpackconf.module.rules.push(stylels[i]);
-    // }
-
-    // utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
-    // webpackconf.module.rules.push();
-
   } else {
-    // var extractCSSi = new ExtractTextPlugin({
-    //   filename: "[name].[hash:7].css",
-    //   allChunks: false,
-    // });
-    // extractCSS = function() {
-    //   return extractCSSi;
-    // }
-
-    
-
-
-    // webpackconf.module.rules.push({
-    //   test: /\.css$/,
-    //   use: extractCSS().extract({
-    //     fallback: 'style-loader',
-    //     use: [{
-    //         loader: 'css-loader',
-    //         options: { sourceMap: isDebug }
-    //       },
-    //       postcssLoader
-    //     ]
-    //   })
-    // }, {
-    //   test: /\.less$/,
-    //   use: extractCSS().extract({
-    //     fallback: 'style-loader',
-    //     use: [{
-    //       loader: 'css-loader',
-    //       options: { sourceMap: isDebug }
-    //     }, postcssLoader, {
-    //       loader: 'less-loader',
-    //       options: { sourceMap: isDebug }
-    //     }]
-    //   })
-    // });
-
-
     webpackconf.plugins.push(
-      new OptimizeCSSPlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false
         },
         sourceMap: false
       }),
+      new OptimizeCSSPlugin({
+        cssProcessorOptions: {
+          safe: true
+        }
+      }),
       new ExtractTextPlugin({
-        filename: '[name].[contenthash].css'
+        filename: 'css/[name].[contenthash].css',
+        allChunks: true
       }),
       new webpack.optimize.OccurrenceOrderPlugin()
     );
   }
-
-  // webpackconf.module.rules.push({
-  //   test: /\.vue$/,
-  //   loader: 'vue-loader',
-  //   options: {
-  //     // loaders: {
-  //     // css: ExtractTextPlugin.extract({
-  //     //   use: [{
-  //     //     loader: 'css-loader',
-  //     //     options: { sourceMap: isDebug }
-  //     //   }, postcssLoader],
-  //     //   fallback: 'vue-style-loader'
-  //     // }),
-  //     // less: ExtractTextPlugin.extract({
-  //     //   use: [{
-  //     //     loader: 'css-loader',
-  //     //     options: { sourceMap: isDebug }
-  //     //   }, postcssLoader, {
-  //     //     loader: 'less-loader',
-  //     //     options: { sourceMap: isDebug }
-  //     //   }],
-  //     //   fallback: 'vue-style-loader'
-  //     // })
-  //     // },
-  //     postcss: postcssLoader,
-  //     // postLoaders: {
-  //     //   html: 'babel-loader'
-  //     // }
-  //   }
-  // });
-
   return webpackconf;
 };
 
