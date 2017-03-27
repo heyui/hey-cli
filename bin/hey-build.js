@@ -11,8 +11,6 @@ var exec = require('child_process').exec;
 
 program
     .usage('[options]')
-    .option('-S, --sourcemap', 'enable source map')
-    .option('-U, --no-uglify', 'disable uglifyjs.')
     .option('-C, --no-clean', 'disable clean before a new build')
     .on('-h', printHelp)
     .on('--help', printHelp)
@@ -21,7 +19,7 @@ program
 function printHelp() {
     console.log('  Examples:'.to.bold.green.color);
     console.log();
-    console.log('    hey build -S     disable source ');
+    console.log('    hey build -C     clean before a new build ');
     console.log();
 }
 
@@ -33,13 +31,13 @@ var args = {
 
 logger.debug("hey build with options: ");
 
-if (program.clean) {
-    var cleanScript = path.join(__dirname, '/hey-clean.js');
-    spawn(cleanScript, {
-        stdio: 'inherit'
-    }).on('close', (code) => {
-        task.build(args);
-    });
-} else {
+// if (program.clean) {
+    // var cleanScript = path.join(__dirname, '/hey-clean.js');
+    // spawn(cleanScript, {
+    //     stdio: 'inherit'
+    // }).on('close', (code) => {
+    //     task.build(args);
+    // });
+// } else {
     task.build(args);
-}
+// }

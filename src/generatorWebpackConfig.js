@@ -11,6 +11,7 @@ var path = require('path'),
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+// var Manifest = require('webpack-manifest-plugin');
 
 /**
  * only given props will be used
@@ -24,25 +25,30 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
  *     postcss
  */
 
-const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
+const initDefaultWebpackConf = function(conf, isDebug, config) {
 
-  var babelOptions = getbabelConfig(fullConf, isDebug);
-  var hashString = isDebug?'':'.[hash:7]';
+  var babelOptions = getbabelConfig(config, isDebug);
 
   var webpackconf = {
     entry: {},
     output: {
       path: `${process.cwd()}/${conf.root}/`,
-      filename: `js/[name]${hashString}.js`,
+      filename: `${config.jsPath}[name]${config.hashString}.js`,
       publicPath: `${conf.publicPath}`
     },
     module: {
       rules: [{
-        test: /\.(ico|jpg|png|gif|svg|eot|otf|webp|ttf|woff|woff2)(\?.*)?$/,
+        test: /\.(ico|jpg|png|gif|svg)(\?.*)?$/,
         loader: "url-loader",
         query: {
           limit: 10000,
-          name: `[path][name]${hashString}.[ext]`
+          name: `${config.staticPath}images/[name]${config.hashString}.[ext]`
+        }
+      }, {
+        test: /\.(eot|otf|webp|ttf|woff|woff2)(\?.*)?$/,
+        loader: "url-loader",
+        query: {
+          name: `${config.staticPath}font/[name]${config.hashString}.[ext]`
         }
       }, {
         test: /\.vue$/,
@@ -54,7 +60,7 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
             from: 'vue'
           })
         }
-      },{
+      }, {
         test: /\.html?$/,
         loader: 'html-loader'
       }, {
@@ -75,7 +81,7 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
     resolve: {
       extensions: ['.js', '.vue', '.json'],
       alias: {
-        'vue$': 'vue/dist/vue.esm.js',
+        // 'vue$': 'vue/dist/vue.esm.js',
         '@': path.join(process.cwd(), 'src'),
       },
       modules: [
@@ -106,7 +112,7 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
           context: process.cwd(),
           babel: babelOptions,
           postcss: [
-              require('autoprefixer')
+            require('autoprefixer')
           ]
         }
       }),
@@ -117,7 +123,7 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
         }
       }),
     ],
-    externals: fullConf.webpack.externals
+    externals: conf.externals
   };
 
   let stylels = webpackUtils.styleLoaders({
@@ -129,8 +135,7 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
     webpackconf.module.rules.push(stylels[i]);
   }
 
-  if (isDebug) {
-  } else {
+  if (!isDebug) {
     webpackconf.plugins.push(
       new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -144,16 +149,19 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
         }
       }),
       new ExtractTextPlugin({
-        filename: `css/[name]${hashString}.css`,
+        filename: `${config.cssPath}/[name]${config.hashString}.css`,
         allChunks: true
       }),
       new webpack.optimize.OccurrenceOrderPlugin()
     );
+    // if (config.manifest) {
+    //   webpackconf.plugins.push(new Manifest());
+    // }
   }
   return webpackconf;
 };
 
-function initCommonOutputPlugins(genWebpack, webpackconf, isDebug) {
+function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
   let comObj = {}
     // check relationship between chunk and common
   if (webpackconf.commonTrunk) {
@@ -171,7 +179,8 @@ function initCommonOutputPlugins(genWebpack, webpackconf, isDebug) {
         let entry = file.replace('.html', '');
         if (resObj && resObj.entry) {
           entry = resObj.entry;
-        }else{
+        }
+        else {
           entry = './' + entry;
         }
         genWebpack.entry[entry] = entry;
@@ -183,7 +192,8 @@ function initCommonOutputPlugins(genWebpack, webpackconf, isDebug) {
             comObj[common].push(entry);
           });
           Array.prototype.push.apply(depends, resObj.commons);
-        } else {
+        }
+        else {
           if (webpackconf.commonTrunk) {
             for (let key in webpackconf.commonTrunk) {
               depends.push(key);
@@ -199,8 +209,8 @@ function initCommonOutputPlugins(genWebpack, webpackconf, isDebug) {
           chunks: depends
         };
 
-        if(!isDebug){
-          Utils.extend(plugin_obj,{
+        if (!isDebug) {
+          Utils.extend(plugin_obj, {
             inject: true,
             minify: {
               removeComments: true,
@@ -216,14 +226,13 @@ function initCommonOutputPlugins(genWebpack, webpackconf, isDebug) {
     }
   }
 
-  var hashString = isDebug?'':'.[hash:7]';
   // add common trunk
   if (webpackconf.commonTrunk) {
     for (let key in webpackconf.commonTrunk) {
       genWebpack.entry[key] = webpackconf.commonTrunk[key];
       genWebpack.plugins.push(new webpack.optimize.CommonsChunkPlugin({
         name: key,
-        filename: `js/common/${key}${hashString}.js`,
+        filename: `${config.jsPath}common/${key}${config.hashString}.js`,
         chunks: comObj[key]
       }))
     }
@@ -253,17 +262,20 @@ function parseEntry(config, entry, isDebug) {
       if (isDebug) {
         entry.unshift(`webpack-dev-server/client?http://localhost:${config.port}`, 'webpack/hot/dev-server');
       }
-    } else if (Utils.isArray(entry)) {
+    }
+    else if (Utils.isArray(entry)) {
       if (isDebug) {
         entry.unshift(`webpack-dev-server/client?http://localhost:${config.port}`, 'webpack/hot/dev-server');
       }
-    } else if (Utils.isObject(entry)) {
+    }
+    else if (Utils.isObject(entry)) {
       for (var key in entry) {
         entry[key] = parseEntry(config, entry[key], isDebug);
       }
     }
     return entry;
-  } else {
+  }
+  else {
     logger.error('No entry is found!');
   }
 }
@@ -271,7 +283,7 @@ function parseEntry(config, entry, isDebug) {
 module.exports = function(conf, isDebug) {
   var webpackConfig = conf.webpack || {};
   var genWebpack = initDefaultWebpackConf(webpackConfig, isDebug, conf);
-  genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig,isDebug);
+  genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig, conf, isDebug);
   genWebpack.entry = parseEntry(conf, genWebpack.entry, isDebug);
 
   if (isDebug) {
@@ -286,7 +298,6 @@ module.exports = function(conf, isDebug) {
     }
     genWebpack.output.publicPath = `http://${IPv4}:${conf.port}/`;
   }
-  logger.info('server start with webpack config: ');
   // logger.info(genWebpack);
   // logger.info(genWebpack.module.rules);
   return genWebpack;

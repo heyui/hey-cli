@@ -4,7 +4,7 @@ var logger = require('./logger');
 var path = require('path');
 var generatorWebpackConfig = require('./generatorWebpackConfig');
 
-function getConfig(args) {
+function getConfig(args,isDebug) {
   var conf = {};
 
   var json = {};
@@ -28,7 +28,7 @@ function getConfig(args) {
     logger.warn("Can't find package.json or hey.js, init system config with default. ");
 
   }
-  var defaultConfig = require('../default/package.default.js');
+  var defaultConfig = require('./default/package.default.js');
   conf = Utils.extend(true, {}, defaultConfig, conf);
   //端口号从命令中获取
   if (args && args.port) {
@@ -43,13 +43,20 @@ function getConfig(args) {
     logger.warn('No webpack config!');
   }
 
+  conf.webpack.root = conf.root;
+
+  var timestamp = conf.timestamp?(new Date().getTime()):"";
+  conf.staticPath = "static" + timestamp + "/";
+  conf.jsPath = conf.staticPath + "js/";
+  conf.cssPath = conf.staticPath + "css/";
+  conf.hashString = isDebug?'':'.[hash:7]';
+
   return conf;
 }
 
 module.exports = function(type, args) {
   var isDebug = type == 'dev';
-  var config = getConfig(args);
-  config.root = config.webpack.root;
+  var config = getConfig(args,isDebug);
   var webpackConf = generatorWebpackConfig(config, isDebug);
   return {config:config,webpack:webpackConf};
 };

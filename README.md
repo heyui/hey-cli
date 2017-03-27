@@ -20,7 +20,8 @@ npm install -g hey-cli
 "hey": {
 	//端口号
 	"port": 9002,
-
+	"root": 'dist', //生成文件的根目录
+  "timestamp": false, //生成的static文件夹是否添加时间戳
 	//webpack相关配置    
 	"webpack": {
 	  //公开path
@@ -29,7 +30,7 @@ npm install -g hey-cli
 	  "output": {
 	  	//输出哪些文件，主要是html，默认会加载和html文件名一样的js文件为入口。支持定义公用包。
 	    "./*.html": {
-	    	"entry":"./src/index.js", //默认加载js文件，并且html自动引用。如果没有配置，则加载与html文件名同样的js文件。
+	    	"entry":"./src/index.js", //默认加载js文件，并且html自动引用。如果没有配置，则自动加载与html文件名同样的js文件。
 	      "commons": [
 	        "common"
 	      ]
@@ -43,16 +44,6 @@ npm install -g hey-cli
 	      "vue",
 	      "vuex",
 	      "manba",
-	      "./js/plugin/model/model",
-	      "./js/common/log",
-	      "./js/common/control",
-	      "./js/common.js",
-	      "./js/plugin/plugin.js",
-	      "./js/plugin/uploader/qiniu",
-	      "lightbox2",
-	      "tooltipster",
-	      "./js/directives_html",
-	      "./js/directives",
 	      "jsoneditor"
 	    ]
 	  },
@@ -84,6 +75,10 @@ npm install -g hey-cli
 	      }
 	    }
 	  }
+	  //定义外部引用
+	  "externals":{
+
+	  }
 	},
 
 	//未做关联引用的文件在build的时候复制到打包的文件夹中
@@ -97,6 +92,65 @@ npm install -g hey-cli
 
 反向代理可以配置pathRewrite，具体请前往[Document](https://webpack.github.io/docs/webpack-dev-server.html#rewriting-urls-of-proxy-request)
 
+
+## 示例
+
+加载vue,vue-router  
+
+```json
+"hey": {
+  "port": 9008,
+  "timestamp": true,
+  "root": "gen",
+  "webpack": {
+    "publicPath": "/",
+    "output": {
+      "./*.html": {
+        "entry":"./src/app",
+        "common":["common"]
+      }
+    },
+    "commonTrunk": {
+      "common":["vue","vue-router"]
+    },
+    "global": {
+      "Vue": "vue"
+    },
+    "devServer": {
+      "historyApiFallback":true
+    }
+  },
+  "copy":["./static/images/**/*"]
+}
+```
+外部加载vue,vue-router  
+
+```json
+"hey": {
+  "port": 9008,
+  "timestamp": true,
+  "root": "gen",
+  "webpack": {
+    "publicPath": "/",
+    "output": {
+      "./*.html": {
+        "entry":"src/app"
+      }
+    },
+    "global": {
+      "Vue": "vue"
+    },
+    "devServer": {
+      "historyApiFallback":true
+    },
+    "externals": {
+      "Vue": "window.Vue",
+      "VueRouter": "window.VueRouter"
+    }
+  },
+  "copy":["./static/images/**/*"]
+}
+```
 
 ## 执行
 
