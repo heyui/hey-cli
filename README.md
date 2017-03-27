@@ -29,6 +29,7 @@ npm install -g hey-cli
 	  "output": {
 	  	//输出哪些文件，主要是html，默认会加载和html文件名一样的js文件为入口。支持定义公用包。
 	    "./*.html": {
+	    	"entry":"./src/index.js", //默认加载js文件，并且html自动引用。如果没有配置，则加载与html文件名同样的js文件。
 	      "commons": [
 	        "common"
 	      ]
