@@ -27,12 +27,13 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
 
   var babelOptions = getbabelConfig(fullConf, isDebug);
+  var hashString = isDebug?'':'.[hash:7]';
 
   var webpackconf = {
     entry: {},
     output: {
       path: `${process.cwd()}/${conf.root}/`,
-      filename: '[name].[hash:7].js',
+      filename: `js/[name]${hashString}.js`,
       publicPath: `${conf.publicPath}`
     },
     module: {
@@ -41,7 +42,7 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
         loader: "url-loader",
         query: {
           limit: 10000,
-          name: "[path][name].[hash:7].[ext]"
+          name: `[path][name]${hashString}.[ext]`
         }
       }, {
         test: /\.vue$/,
@@ -143,7 +144,7 @@ const initDefaultWebpackConf = function(conf, isDebug, fullConf) {
         }
       }),
       new ExtractTextPlugin({
-        filename: 'css/[name].[contenthash].css',
+        filename: `css/[name]${hashString}.css`,
         allChunks: true
       }),
       new webpack.optimize.OccurrenceOrderPlugin()
@@ -213,12 +214,14 @@ function initCommonOutputPlugins(genWebpack, webpackconf, isDebug) {
     }
   }
 
+  var hashString = isDebug?'':'.[hash:7]';
   // add common trunk
   if (webpackconf.commonTrunk) {
     for (let key in webpackconf.commonTrunk) {
       genWebpack.entry[key] = webpackconf.commonTrunk[key];
       genWebpack.plugins.push(new webpack.optimize.CommonsChunkPlugin({
         name: key,
+        filename: `js/common/${key}${hashString}.js`,
         chunks: comObj[key]
       }))
     }
@@ -266,7 +269,7 @@ function parseEntry(config, entry, isDebug) {
 module.exports = function(conf, isDebug) {
   var webpackConfig = conf.webpack || {};
   var genWebpack = initDefaultWebpackConf(webpackConfig, isDebug, conf);
-  genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig, conf ,isDebug);
+  genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig,isDebug);
   genWebpack.entry = parseEntry(conf, genWebpack.entry, isDebug);
 
   if (isDebug) {
