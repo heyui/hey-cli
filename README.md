@@ -120,8 +120,7 @@ module.exports = {
 
 ### 说明
 
-反向代理可以配置pathRewrite，具体请前往[Document](https://webpack.github.io/docs/webpack-dev-server.html#rewriting-urls-of-proxy-request)
-
+devServer可以配置，具体请前往[webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html)
 
 ## 示例
 
