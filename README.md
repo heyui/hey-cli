@@ -13,7 +13,8 @@ npm install -g hey-cli
 
 ## 配置
 
-在package.json中添加属性：
+### package.json
+在package.json中添加属性hey：  
 注：下面的配置请清除注释，json文件没有办法添加注释。
 
 ```javascript
@@ -57,13 +58,7 @@ npm install -g hey-cli
 	  "global": {
 	    "Vue": "vue",
 	    "$": "jquery",
-	    "log": "./js/common/log",
-	    "Common": "./js/common.js",
-	    "Control": "./js/common/control",
-	    "jQuery": "jquery",
-	    "Model": "./js/plugin/model/model",
-	    "Plugin": "./js/plugin/plugin.js",
-	    "Qiniu": "./js/plugin/uploader/qiniu"
+	    "log": "./js/common/log"
 	  },
 
 	  //定义反向代理服务器
@@ -89,6 +84,41 @@ npm install -g hey-cli
 	]
 }
 ```
+
+
+### hey.js
+请在项目根目录下添加hey.js配置文件。 
+```js
+module.exports = {
+  port: 9008,
+  timestamp: true,
+  root: "gen",
+  webpack: {
+    publicPath: "/",
+    output: {
+      "./*html": {
+        entry: "./src/app"
+      }
+    },
+    commonTrunk: {
+      vuec: ["vue-router"]
+    },
+    global: {
+      Vue: "vue"
+    },
+    devServer: {
+      historyApiFallback: true
+    },
+    externals: {
+      Vue: "window.Vue",
+      VueRouter: "window.VueRouter"
+    }
+  },
+  copy: ["./static/images/**/*"]
+};
+```
+
+### 说明
 
 反向代理可以配置pathRewrite，具体请前往[Document](https://webpack.github.io/docs/webpack-dev-server.html#rewriting-urls-of-proxy-request)
 

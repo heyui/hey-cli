@@ -19,14 +19,14 @@ function getConfig(args,isDebug) {
     conf = json.hey;
   } else {
     try {
-      json = require(path.join(process.cwd(), 'hey.js'));
+      conf = require(path.join(process.cwd(), 'hey.js'));
     } catch (ex) {
       source = false;
     }
   }
   if (!source) {
-    logger.warn("Can't find package.json or hey.js, init system config with default. ");
-
+    logger.error("Can't find package.json or hey.js, init system config with default. ");
+    return;
   }
   var defaultConfig = require('./default/package.default.js');
   conf = Utils.extend(true, {}, defaultConfig, conf);
