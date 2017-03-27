@@ -169,12 +169,13 @@ function initCommonOutputPlugins(genWebpack, webpackconf, isDebug) {
       let resObj = webpackconf.output[key];
       files.forEach((file) => {
         let entry = file.replace('.html', '');
-        if (resObj && resObj.jsname) {
-          entry = resObj.jsname;
+        if (resObj && resObj.entry) {
+          entry = resObj.entry;
+        }else{
+          entry = './' + entry;
         }
-        genWebpack.entry[entry] = './' + entry;
+        genWebpack.entry[entry] = entry;
 
-        let name = './' + file;
         let depends = [];
         if (resObj && resObj.commons) {
           resObj.commons.map((common) => {
@@ -190,7 +191,8 @@ function initCommonOutputPlugins(genWebpack, webpackconf, isDebug) {
             }
           }
         }
-        depends.push(file.replace('.html', ''));
+        depends.push(entry);
+        let name = './' + file;
         var plugin_obj = {
           template: name,
           filename: file,
