@@ -165,5 +165,3 @@ hey dev
 ```
 hey build
 ```
-
-本项目Forked from [lovelypig5/kil](https://github.com/lovelypig5/kil)
