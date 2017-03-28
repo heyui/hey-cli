@@ -45,7 +45,7 @@ function getConfig(args,isDebug) {
 
   conf.webpack.root = conf.root;
 
-  var timestamp = conf.timestamp?(new Date().getTime()):"";
+  var timestamp = (isDebug&&conf.timestamp)?(new Date().getTime()):"";
   conf.staticPath = "static" + timestamp + "/";
   conf.jsPath = conf.staticPath + "js/";
   conf.cssPath = conf.staticPath + "css/";

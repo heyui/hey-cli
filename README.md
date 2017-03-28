@@ -22,7 +22,7 @@ npm install -g hey-cli
 	//端口号
 	"port": 9002,
 	"root": 'dist', //生成文件的根目录
-  "timestamp": false, //生成的static文件夹是否添加时间戳
+  "timestamp": false, //build生成的static文件夹是否添加时间戳
 	//webpack相关配置    
 	"webpack": {
 	  //公开path

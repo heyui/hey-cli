@@ -243,6 +243,8 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
     for (var key in webpackconf.global) {
       if (webpackconf.global[key].startsWith('./') || webpackconf.global[key].startsWith('../')) {
         globals[key] = path.resolve(webpackconf.global[key]);
+      }else{
+        globals[key] = webpackconf.global[key];
       }
     }
 
