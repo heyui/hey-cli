@@ -70,11 +70,14 @@ npm install -g hey-cli
 	        "target": "http://yoda:9000"
 	      }
 	    }
-	  }
+	  },
 	  //定义外部引用
 	  "externals":{
 
-	  }
+	  },
+
+    //定义全局less参数定义，可以在任意less中使用参数
+    globalVars: './static/css/var.less',
 	},
 
 	//未做关联引用的文件在build的时候复制到打包的文件夹中

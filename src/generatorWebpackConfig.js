@@ -29,6 +29,15 @@ const initDefaultWebpackConf = function(conf, isDebug, config) {
 
   var babelOptions = getbabelConfig(config, isDebug);
 
+  let stylelOptions = {
+    sourceMap: isDebug,
+    extract: !isDebug
+  };
+
+  if(conf.globalVars){
+    stylelOptions.globalVars = require("./util/less-utils")(path.resolve(conf.globalVars));
+  }
+
   var webpackconf = {
     entry: {},
     output: {
@@ -54,11 +63,7 @@ const initDefaultWebpackConf = function(conf, isDebug, config) {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          loaders: webpackUtils.cssLoaders({
-            sourceMap: isDebug,
-            extract: !isDebug,
-            from: 'vue'
-          })
+          loaders: webpackUtils.cssLoaders(Object.assign({from: 'vue'},stylelOptions))
         }
       }, {
         test: /\.html?$/,
@@ -126,10 +131,7 @@ const initDefaultWebpackConf = function(conf, isDebug, config) {
     externals: conf.externals
   };
 
-  let stylels = webpackUtils.styleLoaders({
-    sourceMap: isDebug,
-    extract: !isDebug
-  });
+  let stylels = webpackUtils.styleLoaders(stylelOptions);
 
   for (var i = 0; i < stylels.length; i++) {
     webpackconf.module.rules.push(stylels[i]);
@@ -247,9 +249,6 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
         globals[key] = webpackconf.global[key];
       }
     }
-
-    logger.debug('ProvidePlugin config from package.json:');
-    logger.debug(globals);
 
     genWebpack.plugins.push(new webpack.ProvidePlugin(globals));
   }
