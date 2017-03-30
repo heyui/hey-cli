@@ -14,7 +14,7 @@ npm install -g hey-cli
 
 ## 配置
 
-### package.json
+### 方式一：package.json
 在package.json中添加属性hey：  
 注：下面的配置请清除注释，json文件没有办法添加注释。
 
@@ -90,7 +90,7 @@ npm install -g hey-cli
 ```
 
 
-### hey.js
+### 方式二：hey.js
 请在项目根目录下添加hey.js配置文件。 
 ```js
 module.exports = {
@@ -186,6 +186,18 @@ devServer可以配置，具体请前往[webpack-dev-server](https://webpack.gith
 ```
 
 ## 执行
+
+创建项目
+
+```
+hey init vue [project-name] // 基于Vue2.0的项目
+```
+
+OR
+
+```
+hey init simple [project-name] // 简单版，不依赖任何框架
+```
 
 启动webpack服务器
 

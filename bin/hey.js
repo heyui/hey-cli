@@ -19,6 +19,7 @@ var subcmd = program.args[0];
 var args = process.argv.slice(3);
 
 const aliases = {
+    "i": "init",
     "b": "build",
     "d": "dev"
 }
@@ -36,6 +37,7 @@ if (!subcmd || subcmd === 'help') {
 function printHelp() {
     console.log('  Package Commands:'.to.bold.green.color);
     console.log();
+    console.log('    init           generate the dir structure');
     console.log('    dev            develop with a dev server');
     console.log('    build          build a package');
     console.log('    release        build a package');
