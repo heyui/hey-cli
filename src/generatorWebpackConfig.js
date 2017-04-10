@@ -25,7 +25,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
  *     postcss
  */
 
-const initDefaultWebpackConf = function(conf, isDebug, config) {
+const initDefaultWebpackConf = function (conf, isDebug, config) {
 
   var babelOptions = getbabelConfig(config, isDebug);
 
@@ -34,7 +34,7 @@ const initDefaultWebpackConf = function(conf, isDebug, config) {
     extract: !isDebug
   };
 
-  if(conf.globalVars){
+  if (conf.globalVars) {
     stylelOptions.globalVars = require("./util/less-utils")(path.resolve(conf.globalVars));
   }
 
@@ -63,7 +63,7 @@ const initDefaultWebpackConf = function(conf, isDebug, config) {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          loaders: webpackUtils.cssLoaders(Object.assign({from: 'vue'},stylelOptions))
+          loaders: webpackUtils.cssLoaders(Object.assign({ from: 'vue' }, stylelOptions))
         }
       }, {
         test: /\.html?$/,
@@ -181,8 +181,7 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
         let entry = file.replace('.html', '');
         if (resObj && resObj.entry) {
           entry = resObj.entry;
-        }
-        else {
+        } else {
           entry = './' + entry;
         }
         genWebpack.entry[entry] = entry;
@@ -194,8 +193,7 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
             comObj[common].push(entry);
           });
           Array.prototype.push.apply(depends, resObj.commons);
-        }
-        else {
+        } else {
           if (webpackconf.commonTrunk) {
             for (let key in webpackconf.commonTrunk) {
               depends.push(key);
@@ -245,7 +243,7 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
     for (var key in webpackconf.global) {
       if (webpackconf.global[key].startsWith('./') || webpackconf.global[key].startsWith('../')) {
         globals[key] = path.resolve(webpackconf.global[key]);
-      }else{
+      } else {
         globals[key] = webpackconf.global[key];
       }
     }
@@ -263,25 +261,22 @@ function parseEntry(config, entry, isDebug) {
       if (isDebug) {
         entry.unshift(`webpack-dev-server/client?http://localhost:${config.port}`, 'webpack/hot/dev-server');
       }
-    }
-    else if (Utils.isArray(entry)) {
+    } else if (Utils.isArray(entry)) {
       if (isDebug) {
         entry.unshift(`webpack-dev-server/client?http://localhost:${config.port}`, 'webpack/hot/dev-server');
       }
-    }
-    else if (Utils.isObject(entry)) {
+    } else if (Utils.isObject(entry)) {
       for (var key in entry) {
         entry[key] = parseEntry(config, entry[key], isDebug);
       }
     }
     return entry;
-  }
-  else {
+  } else {
     logger.error('No entry is found!');
   }
 }
 
-module.exports = function(conf, isDebug) {
+module.exports = function (conf, isDebug) {
   var webpackConfig = conf.webpack || {};
   var genWebpack = initDefaultWebpackConf(webpackConfig, isDebug, conf);
   genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig, conf, isDebug);

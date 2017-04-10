@@ -2,7 +2,7 @@ var path = require('path')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 
-exports.cssLoaders = function(options) {
+exports.cssLoaders = function (options) {
   options = options || {}
 
   var cssLoader = {
@@ -12,10 +12,16 @@ exports.cssLoaders = function(options) {
       sourceMap: options.sourceMap
     }
   }
+  var postcssLoader = {
+    loader: 'postcss-loader',
+    options: {
+      sourceMap: options.sourceMap
+    }
+  }
 
   // generate loader string to be used with extract text plugin
   function generateLoaders(loader, loaderOptions) {
-    var loaders = [cssLoader, "postcss-loader"]
+    var loaders = [cssLoader, postcssLoader]
     if (loader) {
       loaders.push({
         loader: loader + '-loader',
@@ -26,7 +32,7 @@ exports.cssLoaders = function(options) {
     }
 
     let styleLoader = 'style-loader';
-    if(options.from == 'vue'){
+    if (options.from == 'vue') {
       styleLoader = 'vue-style-loader';
     }
 
@@ -37,8 +43,7 @@ exports.cssLoaders = function(options) {
         use: loaders,
         fallback: styleLoader
       })
-    }
-    else {
+    } else {
       return [styleLoader].concat(loaders)
     }
   }
@@ -47,7 +52,7 @@ exports.cssLoaders = function(options) {
   return {
     css: generateLoaders(),
     less: generateLoaders('less', {
-      globalVars:options.globalVars||{}
+      globalVars: options.globalVars || {}
     }),
     sass: generateLoaders('sass', {
       indentedSyntax: true
@@ -59,7 +64,7 @@ exports.cssLoaders = function(options) {
 }
 
 // Generate loaders for standalone style files (outside of .vue)
-exports.styleLoaders = function(options) {
+exports.styleLoaders = function (options) {
   var output = []
   var loaders = exports.cssLoaders(options)
   for (var extension in loaders) {

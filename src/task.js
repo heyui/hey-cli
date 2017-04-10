@@ -12,15 +12,14 @@ module.exports = {
    * load webpack config and start webpack dev server
    * @return {[type]} [description]
    */
-  dev: function(args) {
+  dev: function (args) {
     var config = generatorConfig('dev', args);
 
     var webpack_config = config.webpack;
 
     try {
       var compiler = webpack(webpack_config);
-    }
-    catch (e) {
+    } catch (e) {
       logger.error(e);
     }
 
@@ -37,10 +36,24 @@ module.exports = {
     var devServer = config.config.webpack.devServer;
     if (devServer) {
       for (var key in devServer) {
-        serverCfg[key] = devServer[key];
+        if (key == 'proxy') {
+          serverCfg.proxy = {};
+          let proxy = devServer[key];
+          for (let proxyKey of Object.keys(proxy)) {
+            var proxyConfig = proxy[proxyKey];
+            if (typeof (proxyConfig) == "object") {
+              proxyConfig.toProxy = true;
+              proxyConfig.changeOrigin = true;
+            }
+            serverCfg.proxy[proxyKey] = proxyConfig;
+          }
+        } else {
+          serverCfg[key] = devServer[key];
+        }
       }
     }
     // logger.info(serverCfg);
+    // console.log(serverCfg);
 
     logger.debug('webpack dev server start with config: ');
     new WebpackDevServer(compiler, serverCfg).listen(config.config.port, '0.0.0.0', (err) => {
@@ -58,7 +71,7 @@ module.exports = {
    * use webpack and build bundle
    * @return {[type]} [description]
    */
-  build: function(args, after) {
+  build: function (args, after) {
     var config = generatorConfig('release', args);
     var webpackPack = this.webpackPack;
     if (args.clean) {
@@ -67,8 +80,7 @@ module.exports = {
         logger.info('build cleaned, removed ' + config.config.root + ' folder. ');
         webpackPack(config);
       })
-    }
-    else {
+    } else {
       webpackPack(config);
     }
   },
