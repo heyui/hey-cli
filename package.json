@@ -1,6 +1,6 @@
 {
   "name": "hey-cli",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "webpack脚手架，hot-dev-server，build",
   "keywords": "webpack, hot-dev-server, frontend, web, build",
   "main": "index.js",
@@ -23,6 +23,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
+    "babel-preset-stage-2": "^6.24.1",
     "babel-runtime": "^6.23.0",
     "browserslist": "^1.7.7",
     "colorful": "^2.1.0",

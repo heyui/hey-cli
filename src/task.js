@@ -18,6 +18,8 @@ module.exports = {
     var webpack_config = config.webpack;
 
     try {
+      // console.log(webpack_config.process);
+      // webpack_config.process = {};
       var compiler = webpack(webpack_config);
     } catch (e) {
       logger.error(e);

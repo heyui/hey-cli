@@ -1,6 +1,7 @@
 var less = require("less");
 var fs=require("fs");
 var path=require("path");
+var paths=require("./path");
 var logger = require('../logger');
 
 
@@ -8,15 +9,11 @@ module.exports = function (source,query) {
   query = query || {};
   var camelCase = query.camelCase || false;
   var lessVars = {};
-
-  // var str = rf.readFileSync(source);
-  // var currentFilePath = path.resolve(source);
-  // var stats = fs.lstatSync(source);
   
   var paletteLess = fs.readFileSync(source, 'utf8');
-
   less.parse(paletteLess, {
-    paths:[path.dirname(source)]
+    paths:[path.dirname(source)],
+    relativeUrls: path.join(process.cwd(), 'node_modules')
   }, function (err, root, imports, options) {
     try {
       var evalEnv = new less.contexts.Eval(options);
@@ -36,8 +33,9 @@ module.exports = function (source,query) {
         }
       });
 
+      logger.info("修改全局定义的less参数后记得重启哦~");
       logger.info("全局定义的less参数：");
-      logger.info(lessVars);
+      console.log(lessVars);
     } catch (err) {
     }
     
