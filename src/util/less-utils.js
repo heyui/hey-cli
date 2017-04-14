@@ -11,9 +11,9 @@ module.exports = function (source,query) {
   var lessVars = {};
   
   var paletteLess = fs.readFileSync(source, 'utf8');
+  paletteLess = paletteLess.replace(/\@import \(less\) \"\~/, ("@import (less) \""+ path.join(process.cwd(), 'node_modules') + "/"));
   less.parse(paletteLess, {
-    paths:[path.dirname(source)],
-    relativeUrls: path.join(process.cwd(), 'node_modules')
+    paths:[path.dirname(source)]
   }, function (err, root, imports, options) {
     try {
       var evalEnv = new less.contexts.Eval(options);
@@ -33,9 +33,9 @@ module.exports = function (source,query) {
         }
       });
 
-      logger.info("修改全局定义的less参数后记得重启哦~");
-      logger.info("全局定义的less参数：");
-      console.log(lessVars);
+      logger.info("修改全局定义的less参数后记得重启~~~");
+      logger.info("全局定义的less参数:", Object.keys(lessVars).join(','));
+      // console.log(lessVars);
     } catch (err) {
     }
     

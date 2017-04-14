@@ -47,7 +47,6 @@
     "json-loader": "^0.5.4",
     "less": "^2.7.2",
     "less-loader": "^4.0.2",
-    "log4js": "^0.6.31",
     "metalsmith": "^2.3.0",
     "node-less": "^1.0.0",
     "optimize-css-assets-webpack-plugin": "^1.3.0",
