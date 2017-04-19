@@ -254,6 +254,22 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
   return genWebpack;
 }
 
+function initUmdOutputPlugins(genWebpack, webpackconf, config, isDebug) {
+  let comObj = {};
+  if (webpackconf.umd) {
+    let file = webpackconf.umd.entry;
+    let resObj = webpackconf.umd;
+    genWebpack.entry = path.resolve(file);
+    genWebpack.output = {
+      path: `${process.cwd()}/${config.root}`,
+      filename: resObj.filename,
+      library: resObj.library,
+      libraryTarget: 'umd'
+    };
+  }
+  return genWebpack;
+}
+
 function parseEntry(config, entry, isDebug) {
   if (entry) {
     if (Utils.isString(entry)) {
@@ -280,6 +296,7 @@ module.exports = function (conf, isDebug) {
   var webpackConfig = conf.webpack || {};
   var genWebpack = initDefaultWebpackConf(webpackConfig, isDebug, conf);
   genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig, conf, isDebug);
+  genWebpack = initUmdOutputPlugins(genWebpack, webpackConfig, conf, isDebug);
   genWebpack.entry = parseEntry(conf, genWebpack.entry, isDebug);
 
   if (isDebug) {
