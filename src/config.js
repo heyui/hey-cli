@@ -4,7 +4,7 @@ var logger = require('./logger');
 var path = require('path');
 var generatorWebpackConfig = require('./generatorWebpackConfig');
 
-function getConfig(args,isDebug) {
+function getConfig(args, isDebug) {
   var conf = {};
 
   var json = {};
@@ -43,20 +43,20 @@ function getConfig(args,isDebug) {
     logger.warn('No webpack config!');
   }
 
-  conf.webpack.root = conf.root;
+  conf.webpack.root = conf.dist || conf.root;
 
-  var timestamp = (!isDebug&&conf.timestamp)?(new Date().getTime()):"";
+  var timestamp = (!isDebug && conf.timestamp) ? (new Date().getTime()) : "";
   conf.staticPath = "static" + timestamp + "/";
   conf.jsPath = conf.staticPath + "js/";
   conf.cssPath = conf.staticPath + "css/";
-  conf.hashString = isDebug?'':'.[hash:7]';
+  conf.hashString = isDebug ? '' : '.[hash:7]';
 
   return conf;
 }
 
-module.exports = function(type, args) {
+module.exports = function (type, args) {
   var isDebug = type == 'dev';
-  var config = getConfig(args,isDebug);
+  var config = getConfig(args, isDebug);
   var webpackConf = generatorWebpackConfig(config, isDebug);
-  return {config:config,webpack:webpackConf};
+  return { config: config, webpack: webpackConf };
 };

@@ -41,7 +41,7 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
   var webpackconf = {
     entry: {},
     output: {
-      path: `${process.cwd()}/${conf.dist||conf.root}/`,
+      path: `${process.cwd()}/${conf.root}/`,
       filename: `${config.jsPath}[name]${config.hashString}.js`,
       publicPath: `${conf.publicPath}`
     },
