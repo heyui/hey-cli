@@ -1,10 +1,13 @@
 # hey-cli
-webpack脚手架，hot-dev-server，build。
-主要使用package.json文件配置，支持vue2.0。  
-vue1.0的脚手架请前往[vvpvvp/kil](https://github.com/vvpvvp/kil)。  
-不需要理解webpack，只需要知道如何配置就可以使用。  
-支持es6，热替换，反向代理。  
+webpack脚手架，hot-dev-server，build。  
+不需要理解webpack，只需要知道如何配置就可以使用，摆脱繁琐重复的webpack配置。   
 
+
+## 特性
+全局安装，所有的项目都将支持，不需要每个项目都安装配置webpack。    
+支持<code>ES6</code>，热替换，反向代理，默认支持<code>vue2.0</code>。  
+只需要在package.json中配置<code>hey</code>属性，或者在项目根目录下添加<code>hey.js</code>配置文件即可。  
+可以用于打包UMD模式的公用包。
 
 ## 安装
 
@@ -14,15 +17,13 @@ npm install -g hey-cli
 
 ## 配置
 
-### 方式一：package.json
-在package.json中添加属性hey：  
-注：下面的配置请清除注释，json文件没有办法添加注释。
-
-```javascript
-"hey": {
+### 方式一：hey.js
+请在项目根目录下添加hey.js配置文件。 
+```js
+module.exports = {
 	//端口号
 	"port": 9002,
-	"root": 'dist', //生成文件的根目录
+	"dist": 'dist', //生成文件的根目录
   "timestamp": false, //build生成的static文件夹是否添加时间戳
 	//webpack相关配置    
 	"webpack": {
@@ -69,7 +70,8 @@ npm install -g hey-cli
 	      "/api": {
 	        "target": "http://yoda:9000"
 	      }
-	    }
+	    },
+      historyApiFallback: true
 	  },
 	  //定义外部引用
 	  "externals":{
@@ -86,17 +88,19 @@ npm install -g hey-cli
 	  "./help/**/*",
 	  "./template/**/*"
 	]
-}
+};
 ```
 
 
-### 方式二：hey.js
-请在项目根目录下添加hey.js配置文件。 
-```js
-module.exports = {
+### 方式二：package.json
+在package.json中添加属性hey：  
+注：推荐使用hey.js方式配置，因为json文件没有办法添加注释，并且不能注释代码，不方便调试。
+
+```javascript
+"hey": {
   port: 9008,
   timestamp: true,
-  root: "gen",
+  dist: "gen",
   webpack: {
     publicPath: "/",
     output: {
@@ -119,7 +123,7 @@ module.exports = {
     }
   },
   copy: ["./static/images/**/*"]
-};
+}
 ```
 
 ### 说明
@@ -128,13 +132,13 @@ devServer可以配置，具体请前往[webpack-dev-server](https://webpack.gith
 
 ## 示例
 
-加载vue,vue-router  
+### 加载vue,vue-router  
 
 ```json
 "hey": {
   "port": 9008,
   "timestamp": true,
-  "root": "gen",
+  "dist": "gen",
   "webpack": {
     "publicPath": "/",
     "output": {
@@ -156,13 +160,13 @@ devServer可以配置，具体请前往[webpack-dev-server](https://webpack.gith
   "copy":["./static/images/**/*"]
 }
 ```
-外部加载vue,vue-router  
+### 外部加载vue,vue-router  
 
 ```json
 "hey": {
   "port": 9008,
   "timestamp": true,
-  "root": "gen",
+  "dist": "gen",
   "webpack": {
     "publicPath": "/",
     "output": {
@@ -185,19 +189,24 @@ devServer可以配置，具体请前往[webpack-dev-server](https://webpack.gith
 }
 ```
 
+### 打包UMD模式的公用包
+主要用于一些自己开发的公用包，简单配置即可使用。  
+*由于是打包成UMD模式的公用包，请不要使用import模式。*
+
+```js
+module.exports = {
+  dist: "build",
+  webpack: {
+    umd: {
+      entry: "./src/index.js",
+      library: "Validator",
+      filename: 'validator.js'
+    }
+  }
+};
+```
+
 ## 执行
-
-创建项目
-
-```
-hey init vue [project-name] // 基于Vue2.0的项目
-```
-
-OR
-
-```
-hey init simple [project-name] // 简单版，不依赖任何框架
-```
 
 启动webpack服务器
 
@@ -205,7 +214,8 @@ hey init simple [project-name] // 简单版，不依赖任何框架
 hey dev
 ```
 
-打包项目，支持hash文件，按需加载。
+打包项目，支持hash文件，按需加载。  
+配置文件中使用<code>timestamp</code>属性，可以生成static[hash]命名的文件夹，这样可以防止所有版本的文件汇聚在一个文件夹。
 
 ```
 hey build
