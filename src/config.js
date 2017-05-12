@@ -43,6 +43,7 @@ function getConfig(args, isDebug) {
     logger.warn('No webpack config!');
   }
 
+  conf.root = conf.dist = conf.dist || conf.root;
   conf.webpack.root = conf.dist || conf.root;
 
   var timestamp = (!isDebug && conf.timestamp) ? (new Date().getTime()) : "";
