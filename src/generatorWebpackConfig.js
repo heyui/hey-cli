@@ -43,6 +43,7 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
     output: {
       path: `${process.cwd()}/${conf.root}/`,
       filename: `${config.jsPath}[name]${config.hashString}.js`,
+      chunkFilename: `${config.jsPath}[name]${config.hashString}.js`,
       publicPath: `${conf.publicPath}`
     },
     module: {
