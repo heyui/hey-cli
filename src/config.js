@@ -15,11 +15,12 @@ function getConfig(args, isDebug) {
     source = false;
   }
 
-  if (json.hey) {
+  if (source == true && json.hey) {
     conf = json.hey;
   } else {
     try {
       conf = require(path.join(process.cwd(), 'hey.js'));
+      source = true;
     } catch (ex) {
       source = false;
     }
