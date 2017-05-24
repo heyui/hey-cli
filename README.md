@@ -5,7 +5,7 @@ webpack脚手架，hot-dev-server，build。
 
 ## 特性
 全局安装，所有的项目都将支持，不需要每个项目都安装配置webpack。    
-支持<code>ES6</code>，热替换，反向代理，默认支持<code>vue2.0</code>。  
+支持<code>ES6</code>，热替换，反向代理，默认支持<code>vue2.0</code>，支持<code>react</code>项目。  
 只需要在package.json中配置<code>hey</code>属性，或者在项目根目录下添加<code>hey.js</code>配置文件即可。  
 可以用于打包UMD模式的公用包。
 
@@ -25,6 +25,7 @@ module.exports = {
 	"port": 9002,
 	"dist": 'dist', //生成文件的根目录
   "timestamp": false, //build生成的static文件夹是否添加时间戳
+  "react": "true", //支持react项目
 	//webpack相关配置    
 	"webpack": {
 	  //公开path
