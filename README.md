@@ -25,7 +25,8 @@ module.exports = {
 	"port": 9002,
 	"dist": 'dist', //生成文件的根目录
   "timestamp": false, //build生成的static文件夹是否添加时间戳
-  "react": "true", //支持react项目
+  "react": true, //支持react项目
+  "console": false //打包压缩是否保留console
 	//webpack相关配置    
 	"webpack": {
 	  //公开path
