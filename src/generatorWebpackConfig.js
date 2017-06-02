@@ -163,6 +163,12 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
     //   webpackconf.plugins.push(new Manifest());
     // }
   }
+
+  if(conf.alias){
+    for(let key in conf.alias){
+      webpackconf.resolve.alias[key] = path.join(process.cwd(), conf.alias[key]);
+    }
+  }
   return webpackconf;
 };
 

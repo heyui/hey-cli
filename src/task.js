@@ -58,6 +58,7 @@ module.exports = {
     // console.log(serverCfg);
 
     logger.debug('webpack dev server start with config: ');
+    serverCfg.disableHostCheck = true;
     new WebpackDevServer(compiler, serverCfg).listen(config.config.port, '0.0.0.0', (err) => {
       if (err) {
         logger.error(err);
