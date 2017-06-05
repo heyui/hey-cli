@@ -14,6 +14,7 @@ module.exports = (conf, isDebug) => {
     babelConfig.plugins.push([require.resolve('babel-plugin-transform-async-to-generator')]);
     babelConfig.plugins.push([require.resolve('babel-plugin-transform-flow-strip-types')]);
     babelConfig.plugins.push([require.resolve('babel-plugin-transform-object-rest-spread')]);
+    babelConfig.plugins.push([require.resolve('babel-plugin-array-includes')]);
   // }
 
   babelConfig.cacheDirectory = true;
