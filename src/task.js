@@ -59,7 +59,16 @@ module.exports = {
 
     logger.debug('webpack dev server start with config: ');
     serverCfg.disableHostCheck = true;
-    new WebpackDevServer(compiler, serverCfg).listen(config.config.port, '0.0.0.0', (err) => {
+    serverCfg.compress = true;
+    serverCfg.setup = function(app){
+      app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+        res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+        next();
+      });
+    }
+    new WebpackDevServer(compiler, serverCfg).listen(config.config.port, '::', (err) => {
       if (err) {
         logger.error(err);
         process.exit(1);
