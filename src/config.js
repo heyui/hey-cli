@@ -5,29 +5,35 @@ var path = require('path');
 var generatorWebpackConfig = require('./generatorWebpackConfig');
 
 function getConfig(args, isDebug) {
-  var conf = {};
+  var conf = null;
 
   var json = {};
   var source = true;
+  var error = null;
+
   try {
-    json = require(path.join(process.cwd(), 'package.json'));
+    conf = require(path.join(process.cwd(), 'hey.js'));
+    source = true;
   } catch (ex) {
+    error = ex;
     source = false;
   }
 
-  if (source == true && json.hey) {
-    conf = json.hey;
-  } else {
+  if (source == false) {
     try {
-      conf = require(path.join(process.cwd(), 'hey.js'));
-      source = true;
+      json = require(path.join(process.cwd(), 'package.json'));
+      if(json.hey){
+        conf = json.hey;
+        source = true;
+      }
     } catch (ex) {
+      logger.error("Error: ", ex.toString());
       source = false;
     }
   }
   if (!source) {
-    logger.error("Can't find package.json or hey.js, init system config with default. ");
-    return;
+    logger.error("Can't find hey.js or package.json 'hey' param. ");
+    return false;
   }
   var defaultConfig = require('./default/package.default.js');
   conf = Utils.extend(true, {}, defaultConfig, conf);
@@ -59,6 +65,9 @@ function getConfig(args, isDebug) {
 module.exports = function (type, args) {
   var isDebug = type == 'dev';
   var config = getConfig(args, isDebug);
+  if(config === false){
+    return false;
+  }
   var webpackConf = generatorWebpackConfig(config, isDebug);
   return { config: config, webpack: webpackConf };
 };

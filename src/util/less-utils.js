@@ -34,7 +34,7 @@ module.exports = function (source,query) {
       });
 
       logger.info("修改全局定义的less参数后记得重启~~~");
-      logger.info("全局定义的less参数:", Object.keys(lessVars).join(','));
+      // logger.info("全局定义的less参数:", Object.keys(lessVars).join(','));
       // console.log(lessVars);
     } catch (err) {
     }

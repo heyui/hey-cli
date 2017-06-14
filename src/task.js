@@ -14,6 +14,7 @@ module.exports = {
    */
   dev: function (args) {
     var config = generatorConfig('dev', args);
+    if(config === false) return;
 
     var webpack_config = config.webpack;
 
@@ -85,6 +86,7 @@ module.exports = {
    */
   build: function (args, after) {
     var config = generatorConfig('release', args);
+    if(config === false) return;
     var webpackPack = this.webpackPack;
     if (args.clean) {
       logger.info('start remove ' + config.config.root + ' folder. ');
