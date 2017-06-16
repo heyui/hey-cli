@@ -68,7 +68,11 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
         }
       }, {
         test: /\.html?$/,
-        loader: 'html-loader'
+        loader: 'html-loader',
+        options: {
+            attrs: ["img:src", "link:href"],
+            interpolate: true,
+        },
       }, {
         test: /\.tpl?$/,
         loader: 'ejs-loader'
