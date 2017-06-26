@@ -11,7 +11,7 @@ webpack脚手架，hot-dev-server，build。
 
 ## 安装
 
-```
+```sh
 npm install -g hey-cli
 ```
 
@@ -22,74 +22,74 @@ npm install -g hey-cli
 ```js
 module.exports = {
 	//端口号
-	"port": 9002,
-	"dist": 'dist', //生成文件的根目录
+  "port": 9002,
+  "dist": 'dist', //生成文件的根目录
   "timestamp": false, //build生成的static文件夹是否添加时间戳
   "react": true, //支持react项目
   "console": false //打包压缩是否保留console
 	//webpack相关配置    
-	"webpack": {
-	  //公开path
-	  "publicPath": "/", 
+  "webpack": {
+    //公开path
+    "publicPath": "/", 
 
-	  "output": {
-	  	//输出哪些文件，主要是html，默认会加载和html文件名一样的js文件为入口。支持定义公用包。
-	    "./*.html": {
-	    	"entry":"./src/index.js", //默认加载js文件，并且html自动引用。如果没有配置，则自动加载与html文件名同样的js文件。
-	      "commons": [
-	        "common"
-	      ]
-	    }
-	  },
+    "output": {
+      //输出哪些文件，主要是html，默认会加载和html文件名一样的js文件为入口。支持定义公用包。
+      "./*.html": {
+        "entry":"./src/index.js", //默认加载js文件，并且html自动引用。如果没有配置，则自动加载与html文件名同样的js文件。
+        "commons": [
+          "common"
+        ]
+      }
+    },
 
-	  //公共包定义，可以定义多个
-	  "commonTrunk": {
-	    "common": [
-	      "jquery",
-	      "vue",
-	      "vuex",
-	      "manba",
-	      "jsoneditor"
-	    ]
-	  },
+    //公共包定义，可以定义多个
+    "commonTrunk": {
+      "common": [
+        "jquery",
+        "vue",
+        "vuex",
+        "manba",
+        "jsoneditor"
+      ]
+    },
 
-	  //定义假名
-	  "resolve": {
-	    "alias": {}
-	  },
+    //定义假名
+    "resolve": {
+      "alias": {}
+    },
 
-	  //定义全局变量
-	  "global": {
-	    "Vue": "vue",
-	    "$": "jquery",
-	    "log": "./js/common/log"
-	  },
+    //定义全局变量
+    "global": {
+      "Vue": "vue",
+      "$": "jquery",
+      "log": "./js/common/log"
+    },
 
-	  //定义反向代理服务器
-	  "devServer": {
-	    "proxy": {
-	      //设定/api开头的url向定义的接口请求
-	      "/api": {
-	        "target": "http://yoda:9000"
-	      }
-	    },
+    //定义反向代理服务器
+    "devServer": {
+      "proxy": {
+        //设定/api开头的url向定义的接口请求
+        "/api": {
+          "target": "http://yoda:9000"
+        }
+      },
       historyApiFallback: true
-	  },
-	  //定义外部引用
-	  "externals":{
+    },
+    //定义外部引用
+    "externals":{
 
-	  },
+    },
 
     //定义全局less参数定义，可以在任意less中使用参数
     globalVars: './static/css/var.less',
-	},
+  },
 
-	//未做关联引用的文件在build的时候复制到打包的文件夹中
-	"copy": [
-	  "./images/**/*",
-	  "./help/**/*",
-	  "./template/**/*"
-	]
+  //未做关联引用的文件在build的时候复制到打包的文件夹中
+  "copy": [
+    "./images/**/*",
+    "./help/**/*",
+    "./template/**/*"
+  ]
 };
 ```
 
@@ -215,13 +215,13 @@ module.exports = {
 
 启动webpack服务器
 
-```
+```sh
 hey dev
 ```
 
 打包项目，支持hash文件，按需加载。  
 配置文件中使用<code>timestamp</code>属性，可以生成static[hash]命名的文件夹，这样可以防止所有版本的文件汇聚在一个文件夹。
 
-```
+```sh
 hey build
 ```
