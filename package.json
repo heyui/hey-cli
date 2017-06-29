@@ -1,8 +1,8 @@
 {
   "name": "hey-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "webpack脚手架，hot-dev-server，build",
-  "keywords": "webpack, hot-dev-server, frontend, web, build",
+  "keywords": ["webpack", "hot-dev-server", "frontend", "web", "build"],
   "main": "index.js",
   "bin": {
     "hey": "bin/hey.js"
@@ -75,7 +75,6 @@
     "vue-template-compiler": "^2.2.4",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.4",
-    "webpack-manifest-plugin": "^1.1.0",
     "webpack-merge": "^4.1.0"
   },
   "engines": {

@@ -11,7 +11,10 @@ var path = require('path'),
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-// var Manifest = require('webpack-manifest-plugin');
+var HtmlWebpackCDNPlugin = require('./plugins/HtmlWebpackCDNPlugin');
+// var LessLoaderGlobalPlugin = require('./plugins/LessLoaderGlobalPlugin');
+// var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
+// var ManifestPlugin = require('webpack-manifest-plugin');
 
 /**
  * only given props will be used
@@ -163,8 +166,20 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
       }),
       new webpack.optimize.OccurrenceOrderPlugin()
     );
+
+    if(conf.htmlPublicPath){
+      webpackconf.plugins.push(new HtmlWebpackCDNPlugin())
+    }
+    // log(conf.htmlPublicPath);
     // if (config.manifest) {
-    //   webpackconf.plugins.push(new Manifest());
+    // if (true) {
+    //   webpackconf.plugins.push(
+    //     new ManifestPlugin(),
+    //     new ChunkManifestPlugin({
+    //       filename: 'manifest.json',
+    //       manifestVariable: 'webpackManifest',
+    //       inlineManifest: false
+    //   }));
     // }
   }
 
@@ -225,6 +240,7 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
         if (!isDebug) {
           Utils.extend(plugin_obj, {
             inject: true,
+            prefix: webpackconf.htmlPublicPath,
             minify: {
               removeComments: true,
               collapseWhitespace: true,
@@ -246,7 +262,11 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
       genWebpack.plugins.push(new webpack.optimize.CommonsChunkPlugin({
         name: key,
         filename: `${config.jsPath}common/${key}${config.hashString}.js`,
-        chunks: comObj[key]
+        chunks: comObj[key],
+        minChunks: function (module) {
+          // this assumes your vendor imports exist in the node_modules directory
+          return module.context && module.context.indexOf('node_modules') !== -1;
+        }
       }))
     }
   }
