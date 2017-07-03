@@ -211,6 +211,10 @@ module.exports = {
 };
 ```
 
+## 注意
+
+**项目依赖不需要添加vue，因为hey-cli已经内置安装了，并且由于vue-template-compiler需要和vue版本保持一直，所以最好不要添加其他版本的vue。**
+
 ## 执行
 
 启动webpack服务器
