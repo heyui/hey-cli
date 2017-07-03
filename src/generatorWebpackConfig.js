@@ -94,7 +94,7 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
     resolve: {
       extensions: ['.js', '.vue', '.jsx', '.json'],
       alias: {
-        // 'vue$': 'vue/dist/vue.esm.js',
+        // 'vue$': 'vue/dist/vue.runtime.esm.js',
         '@': path.join(process.cwd(), 'src'),
       },
       modules: [
