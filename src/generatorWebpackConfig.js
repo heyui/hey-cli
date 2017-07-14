@@ -214,6 +214,8 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
             entry = './' + entry;
           }
           genWebpack.entry[entry] = entry;
+        }else{
+          genWebpack.entry[entry] = "";
         }
 
         let depends = [];
