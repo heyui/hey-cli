@@ -12,6 +12,7 @@ var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HtmlWebpackCDNPlugin = require('./plugins/HtmlWebpackCDNPlugin');
+var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 // var LessLoaderGlobalPlugin = require('./plugins/LessLoaderGlobalPlugin');
 // var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 // var ManifestPlugin = require('webpack-manifest-plugin');
@@ -31,7 +32,6 @@ var HtmlWebpackCDNPlugin = require('./plugins/HtmlWebpackCDNPlugin');
 const initDefaultWebpackConf = function (conf, isDebug, config) {
 
   var babelOptions = getbabelConfig(config, isDebug);
-
   let stylelOptions = {
     sourceMap: isDebug,
     extract: !isDebug
@@ -116,11 +116,11 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
         path.join(paths.join(path.sep), 'node_modules')
       ]
     },
-    devtool: (isDebug ? '#eval' : false),
+    devtool: (isDebug ? '#eval' : (conf.sourceMap ? 'source-map' : false)),
     plugins: [
       new webpack.LoaderOptionsPlugin({
         options: {
-          minimize: isDebug || !!conf.minimize,
+          minimize: !isDebug,
           debug: isDebug,
           context: process.cwd(),
           babel: babelOptions,
@@ -153,7 +153,7 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
           drop_debugger: true,
           drop_console: !conf.console
         },
-        sourceMap: !!conf.sourceMap
+        sourceMap: conf.sourceMap
       }),
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
