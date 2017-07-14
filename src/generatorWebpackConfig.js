@@ -120,7 +120,7 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
     plugins: [
       new webpack.LoaderOptionsPlugin({
         options: {
-          minimize: !isDebug,
+          minimize: isDebug || !!conf.minimize,
           debug: isDebug,
           context: process.cwd(),
           babel: babelOptions,
