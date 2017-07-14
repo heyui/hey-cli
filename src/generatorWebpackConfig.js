@@ -207,16 +207,12 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
       let resObj = webpackconf.output[key];
       files.forEach((file) => {
         let entry = file.replace('.html', '');
-        if(resObj.entry !== ''){
-          if (resObj && resObj.entry) {
-            entry = resObj.entry;
-          } else {
-            entry = './' + entry;
-          }
-          genWebpack.entry[entry] = entry;
-        }else{
-          genWebpack.entry[entry] = "";
+        if (resObj && resObj.entry) {
+          entry = resObj.entry;
+        } else {
+          entry = './' + entry;
         }
+        genWebpack.entry[entry] = entry;
 
         let depends = [];
         if (resObj && resObj.commons) {
