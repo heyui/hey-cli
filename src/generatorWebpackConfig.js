@@ -151,9 +151,9 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
         compress: {
           warnings: false,
           drop_debugger: true,
-          drop_console: !config.console
+          drop_console: !conf.console
         },
-        sourceMap: false
+        sourceMap: !!conf.sourceMap
       }),
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
@@ -207,12 +207,14 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
       let resObj = webpackconf.output[key];
       files.forEach((file) => {
         let entry = file.replace('.html', '');
-        if (resObj && resObj.entry) {
-          entry = resObj.entry;
-        } else {
-          entry = './' + entry;
+        if(resObj.entry !== ''){
+          if (resObj && resObj.entry) {
+            entry = resObj.entry;
+          } else {
+            entry = './' + entry;
+          }
+          genWebpack.entry[entry] = entry;
         }
-        genWebpack.entry[entry] = entry;
 
         let depends = [];
         if (resObj && resObj.commons) {

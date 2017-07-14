@@ -68,6 +68,7 @@ module.exports = function (type, args) {
   if(config === false){
     return false;
   }
+  
   var webpackConf = generatorWebpackConfig(config, isDebug);
   return { config: config, webpack: webpackConf };
 };
