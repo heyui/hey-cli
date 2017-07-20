@@ -77,6 +77,9 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
             interpolate: true,
         },
       }, {
+        test: /\.exec\.js$/,
+        use: [ 'script-loader' ]
+      }, {
         test: /\.tpl?$/,
         loader: 'ejs-loader'
       }, {
