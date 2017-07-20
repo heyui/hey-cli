@@ -73,7 +73,7 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
         test: /\.html?$/,
         loader: 'html-loader',
         options: {
-            attrs: ["img:src", "link:href"],
+            attrs: ["img:src", "link:href", "script:src"],
             interpolate: true,
         },
       }, {

@@ -26,9 +26,10 @@ module.exports = {
   "dist": 'dist', //生成文件的根目录
   "timestamp": false, //build生成的static文件夹是否添加时间戳
   "react": true, //支持react项目
-  "console": false //打包压缩是否保留console
 	//webpack相关配置    
   "webpack": {
+    "console": false, //打包压缩是否保留console，默认为false
+    "sourceMap" : false, //打包的时候要不要保留sourceMap, 默认为false
     //公开path
     "publicPath": "/", 
 
