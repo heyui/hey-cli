@@ -87,7 +87,7 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
         loader: 'json-loader',
       }, {
         test: /\.(jsx|js)?$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules|bower_components|\.exec\.js$)/,
         use: [{
           loader: 'babel-loader',
           options: babelOptions
