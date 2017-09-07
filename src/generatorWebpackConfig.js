@@ -31,7 +31,6 @@ var UglifyJsParallelPlugin = require('webpack-uglify-parallel');
  */
 
 const initDefaultWebpackConf = function (conf, isDebug, config) {
-
   var babelOptions = getbabelConfig(config, isDebug);
   let stylelOptions = {
     sourceMap: isDebug,
@@ -43,6 +42,7 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
   }
 
   var webpackconf = {
+    node: config.webpack.node,
     entry: {},
     output: {
       path: `${process.cwd()}/${conf.root}/`,
