@@ -188,6 +188,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
       genWebpackConfig[c] = webpackConfig[c];
     }
   }
+  console.log(genWebpackConfig)
 
   return genWebpackConfig;
 };
@@ -326,12 +327,12 @@ function parseEntry(config, entry, isDebug) {
   }
 }
 
-module.exports = function (webpackConfig, isDebug) {
-  var webpackConfig = webpackConfig.webpack || {};
-  var genWebpack = initDefaultWebpackConf(webpackConfig, isDebug, webpackConfig);
-  genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig, webpackConfig, isDebug);
-  genWebpack = initUmdOutputPlugins(genWebpack, webpackConfig, webpackConfig, isDebug);
-  genWebpack.entry = parseEntry(webpackConfig, genWebpack.entry, isDebug);
+module.exports = function (config, isDebug) {
+  var webpackConfig = config.webpack || {};
+  var genWebpack = initDefaultWebpackConf(webpackConfig, isDebug, config);
+  genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug);
+  genWebpack = initUmdOutputPlugins(genWebpack, webpackConfig, config, isDebug);
+  genWebpack.entry = parseEntry(config, genWebpack.entry, isDebug);
 
   if (isDebug) {
     genWebpack.plugins.push(new webpack.HotModuleReplacementPlugin());
