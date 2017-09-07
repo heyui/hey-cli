@@ -93,7 +93,7 @@ module.exports = {
   ]
 };
 ```
-
+*webpack下的参数：node, externals, stats, target, devtool, performance将直接定义至webpack配置项中。*
 
 ### 方式二：package.json
 在package.json中添加属性hey：  

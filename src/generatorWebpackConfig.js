@@ -30,25 +30,24 @@ var UglifyJsParallelPlugin = require('webpack-uglify-parallel');
  *     postcss
  */
 
-const initDefaultWebpackConf = function (conf, isDebug, config) {
+const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
   var babelOptions = getbabelConfig(config, isDebug);
   let stylelOptions = {
     sourceMap: isDebug,
     extract: !isDebug
   };
 
-  if (conf.globalVars) {
-    stylelOptions.globalVars = require("./util/less-utils")(path.resolve(conf.globalVars));
+  if (webpackConfig.globalVars) {
+    stylelOptions.globalVars = require("./util/less-utils")(path.resolve(webpackConfig.globalVars));
   }
 
-  var webpackconf = {
-    node: config.webpack.node,
+  var genWebpackConfig = {
     entry: {},
     output: {
-      path: `${process.cwd()}/${conf.root}/`,
+      path: `${process.cwd()}/${webpackConfig.root}/`,
       filename: `${config.jsPath}[name]${config.hashString}.js`,
       chunkFilename: `${config.jsPath}[name]${config.hashString}.js`,
-      publicPath: `${conf.publicPath}`
+      publicPath: `${webpackConfig.publicPath}`
     },
     module: {
       rules: [{
@@ -120,7 +119,7 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
         path.join(paths.join(path.sep), 'node_modules')
       ]
     },
-    devtool: (isDebug ? '#eval' : (conf.sourceMap ? 'source-map' : false)),
+    devtool: (isDebug ? '#eval' : (webpackConfig.sourceMap ? 'source-map' : false)),
     plugins: [
       new webpack.LoaderOptionsPlugin({
         options: {
@@ -140,31 +139,22 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
         }
       }),
     ],
-    externals: conf.externals
   };
 
   let stylels = webpackUtils.styleLoaders(stylelOptions);
 
   for (var i = 0; i < stylels.length; i++) {
-    webpackconf.module.rules.push(stylels[i]);
+    genWebpackConfig.module.rules.push(stylels[i]);
   }
 
   if (!isDebug) {
-    webpackconf.plugins.push(
-      // new webpack.optimize.UglifyJsPlugin({
-      //   compress: {
-      //     warnings: false,
-      //     drop_debugger: true,
-      //     drop_console: !conf.console
-      //   },
-      //   sourceMap: conf.sourceMap
-      // }),
+    genWebpackConfig.plugins.push(
       new UglifyJsParallelPlugin({
         workers: os.cpus().length,
         mangle: true,
         compressor: {
           warnings: false,
-          drop_console: !conf.console,
+          drop_console: !webpackConfig.console,
           drop_debugger: true
         }
       }),
@@ -180,44 +170,42 @@ const initDefaultWebpackConf = function (conf, isDebug, config) {
       new webpack.optimize.OccurrenceOrderPlugin()
     );
 
-    if(conf.htmlPublicPath){
-      webpackconf.plugins.push(new HtmlWebpackCDNPlugin())
+    if(webpackConfig.htmlPublicPath){
+      genWebpackConfig.plugins.push(new HtmlWebpackCDNPlugin())
     }
-    // log(conf.htmlPublicPath);
-    // if (config.manifest) {
-    // if (true) {
-    //   webpackconf.plugins.push(
-    //     new ManifestPlugin(),
-    //     new ChunkManifestPlugin({
-    //       filename: 'manifest.json',
-    //       manifestVariable: 'webpackManifest',
-    //       inlineManifest: false
-    //   }));
-    // }
   }
 
-  if(conf.alias){
-    for(let key in conf.alias){
-      webpackconf.resolve.alias[key] = path.join(process.cwd(), conf.alias[key]);
+  if(webpackConfig.alias){
+    for(var key in webpackConfig.alias){
+      genWebpackConfig.resolve.alias[key] = path.join(process.cwd(), webpackConfig.alias[key]);
     }
   }
-  return webpackconf;
+  
+  var copyConfig = ['node', 'externals', 'stats', 'target', 'devtool', 'performance']
+  for(var i = 0; i < copyConfig.length; i++){
+    var c = copyConfig[i];
+    if(webpackConfig[c]){
+      genWebpackConfig[c] = webpackConfig[c];
+    }
+  }
+
+  return genWebpackConfig;
 };
 
-function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
+function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
   let comObj = {}
     // check relationship between chunk and common
-  if (webpackconf.commonTrunk) {
-    for (let key in webpackconf.commonTrunk) {
+  if (webpackConfig.commonTrunk) {
+    for (let key in webpackConfig.commonTrunk) {
       comObj[key] = [];
     }
   }
 
   // add output
-  if (webpackconf.output) {
-    for (let key in webpackconf.output) {
+  if (webpackConfig.output) {
+    for (let key in webpackConfig.output) {
       let files = glob.sync(key);
-      let resObj = webpackconf.output[key];
+      let resObj = webpackConfig.output[key];
       files.forEach((file) => {
         let entry = file.replace('.html', '');
         if (resObj && resObj.entry) {
@@ -235,8 +223,8 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
           });
           Array.prototype.push.apply(depends, resObj.commons);
         } else {
-          if (webpackconf.commonTrunk) {
-            for (let key in webpackconf.commonTrunk) {
+          if (webpackConfig.commonTrunk) {
+            for (let key in webpackConfig.commonTrunk) {
               depends.push(key);
               comObj[key].push(entry);
             }
@@ -253,7 +241,7 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
         if (!isDebug) {
           Utils.extend(plugin_obj, {
             inject: true,
-            prefix: webpackconf.htmlPublicPath,
+            prefix: webpackConfig.htmlPublicPath,
             minify: {
               removeComments: true,
               collapseWhitespace: true,
@@ -269,9 +257,9 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
   }
 
   // add common trunk
-  if (webpackconf.commonTrunk) {
-    for (let key in webpackconf.commonTrunk) {
-      genWebpack.entry[key] = webpackconf.commonTrunk[key];
+  if (webpackConfig.commonTrunk) {
+    for (let key in webpackConfig.commonTrunk) {
+      genWebpack.entry[key] = webpackConfig.commonTrunk[key];
       genWebpack.plugins.push(new webpack.optimize.CommonsChunkPlugin({
         name: key,
         filename: `${config.jsPath}common/${key}${config.hashString}.js`,
@@ -284,13 +272,13 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
     }
   }
 
-  if (webpackconf.global) {
+  if (webpackConfig.global) {
     var globals = {};
-    for (var key in webpackconf.global) {
-      if (webpackconf.global[key].startsWith('./') || webpackconf.global[key].startsWith('../')) {
-        globals[key] = path.resolve(webpackconf.global[key]);
+    for (var key in webpackConfig.global) {
+      if (webpackConfig.global[key].startsWith('./') || webpackConfig.global[key].startsWith('../')) {
+        globals[key] = path.resolve(webpackConfig.global[key]);
       } else {
-        globals[key] = webpackconf.global[key];
+        globals[key] = webpackConfig.global[key];
       }
     }
 
@@ -300,11 +288,11 @@ function initCommonOutputPlugins(genWebpack, webpackconf, config, isDebug) {
   return genWebpack;
 }
 
-function initUmdOutputPlugins(genWebpack, webpackconf, config, isDebug) {
+function initUmdOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
   let comObj = {};
-  if (webpackconf.umd) {
-    let file = webpackconf.umd.entry;
-    let resObj = webpackconf.umd;
+  if (webpackConfig.umd) {
+    let file = webpackConfig.umd.entry;
+    let resObj = webpackConfig.umd;
     genWebpack.entry = path.resolve(file);
     genWebpack.output = {
       path: `${process.cwd()}/${config.root}`,
@@ -338,12 +326,12 @@ function parseEntry(config, entry, isDebug) {
   }
 }
 
-module.exports = function (conf, isDebug) {
-  var webpackConfig = conf.webpack || {};
-  var genWebpack = initDefaultWebpackConf(webpackConfig, isDebug, conf);
-  genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig, conf, isDebug);
-  genWebpack = initUmdOutputPlugins(genWebpack, webpackConfig, conf, isDebug);
-  genWebpack.entry = parseEntry(conf, genWebpack.entry, isDebug);
+module.exports = function (webpackConfig, isDebug) {
+  var webpackConfig = webpackConfig.webpack || {};
+  var genWebpack = initDefaultWebpackConf(webpackConfig, isDebug, webpackConfig);
+  genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig, webpackConfig, isDebug);
+  genWebpack = initUmdOutputPlugins(genWebpack, webpackConfig, webpackConfig, isDebug);
+  genWebpack.entry = parseEntry(webpackConfig, genWebpack.entry, isDebug);
 
   if (isDebug) {
     genWebpack.plugins.push(new webpack.HotModuleReplacementPlugin());
@@ -355,7 +343,7 @@ module.exports = function (conf, isDebug) {
     //     }
     //   }
     // }
-    // genWebpack.output.publicPath = `http://${IPv4}:${conf.port}/`;
+    // genWebpack.output.publicPath = `http://${IPv4}:${webpackConfig.port}/`;
   }
   // logger.info(genWebpack);
   // logger.info(genWebpack.module.rules);
