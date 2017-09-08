@@ -188,7 +188,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
       genWebpackConfig[c] = webpackConfig[c];
     }
   }
-  console.log(genWebpackConfig)
+  // console.log(genWebpackConfig)
 
   return genWebpackConfig;
 };
