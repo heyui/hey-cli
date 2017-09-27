@@ -4,6 +4,7 @@ var logger = require('./logger');
 var webpack = require('webpack');
 var glob = require('glob');
 var fs = require('fs-extra');
+var fss = require("fs");
 var rimraf = require('rimraf');
 
 
@@ -92,15 +93,16 @@ module.exports = {
       logger.info('start remove ' + config.config.root + ' folder. ');
       rimraf(config.config.root, () => {
         logger.info('build cleaned, removed ' + config.config.root + ' folder. ');
-        webpackPack(config);
+        webpackPack(config, args);
       })
     } else {
-      webpackPack(config);
+      webpackPack(config, args);
     }
   },
-  webpackPack(config, after) {
+  webpackPack(config, args) {
     logger.info('start build project... ');
     var compiler = webpack(config.webpack);
+    // console.log(config.webpack);
     compiler.run((err, stats) => {
       if (err) {
         logger.error(err);
@@ -112,24 +114,32 @@ module.exports = {
       if (jsonStats.warnings.length > 0) {
         logger.warn(jsonStats.warnings);
       }
+      // if (args.profile) {
+        fss.writeFile(config.webpack.output.path + '/stat.json', JSON.stringify(jsonStats),  function(err) {
+          if (err) {
+              return console.error(err);
+          }
+          console.log("stat文件生成成功！");
+       });
+      // }
 
       logger.info('build complete. ');
-      logger.info('start copying. ');
       var conf = config.config;
       if (conf.copy && conf.copy.length > 0) {
+        logger.info('start copying. ');
         conf.copy.forEach((key) => {
           let files = glob.sync(key);
           files.forEach((file) => {
             fs.copySync(file, `${conf.root}/${file}`);
           })
+          logger.info('copy complete. ');
         })
       }
-      logger.info('copy complete. ');
       logger.info('build successfully. ');
 
-      if (after && typeof after === "function") {
-        after();
-      }
+      // if (after && typeof after === "function") {
+      //   after();
+      // }
     });
   }
 }
