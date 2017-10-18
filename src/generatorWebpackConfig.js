@@ -149,15 +149,15 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
   if (!isDebug) {
     genWebpackConfig.plugins.push(
-      new UglifyJsParallelPlugin({
-        workers: os.cpus().length,
-        mangle: true,
-        compressor: {
-          warnings: false,
-          drop_console: !webpackConfig.console,
-          drop_debugger: true
-        }
-      }),
+      // new UglifyJsParallelPlugin({
+      //   workers: os.cpus().length,
+      //   mangle: true,
+      //   compressor: {
+      //     warnings: false,
+      //     drop_console: !webpackConfig.console,
+      //     drop_debugger: true
+      //   }
+      // }),
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
           safe: true
