@@ -6,6 +6,7 @@ var glob = require('glob');
 var fs = require('fs-extra');
 var fss = require("fs");
 var rimraf = require('rimraf');
+var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 
 
 module.exports = {
@@ -102,7 +103,11 @@ module.exports = {
   webpackPack(config, args) {
     logger.info('start build project... ');
     var compiler = webpack(config.webpack);
-    // console.log(config.webpack);
+    
+    compiler.apply(new ProgressPlugin(function(percentage, msg, msg2, msg3, msg4) {
+      logger.info((percentage * 100) + '%', msg, msg2||"");
+    }));
+    
     compiler.run((err, stats) => {
       if (err) {
         logger.error(err);
