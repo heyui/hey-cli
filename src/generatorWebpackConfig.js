@@ -13,7 +13,7 @@ getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HtmlWebpackCDNPlugin = require('./plugins/HtmlWebpackCDNPlugin');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-var UglifyJsParallelPlugin = require('webpack-uglify-parallel');
+// var UglifyJsParallelPlugin = require('webpack-uglify-parallel');
 // var LessLoaderGlobalPlugin = require('./plugins/LessLoaderGlobalPlugin');
 // var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 // var ManifestPlugin = require('webpack-manifest-plugin');
@@ -236,7 +236,7 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
         var plugin_obj = {
           template: name,
           filename: file,
-          chunks: depends
+          chunks: depends,
         };
 
         if (!isDebug) {
@@ -248,7 +248,7 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
               collapseWhitespace: true,
               removeAttributeQuotes: true
             },
-            chunksSortMode: 'dependency'
+            chunksSortMode: 'auto'
           })
         }
 
