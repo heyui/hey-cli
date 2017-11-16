@@ -78,6 +78,7 @@
     "rimraf": "^2.5.1",
     "save": "^2.3.1",
     "script-loader": "^0.7.0",
+    "setimmediate": "^1.0.5",
     "sockjs-client": "^1.1.4",
     "stream": "^0.0.2",
     "strip-ansi": "^4.0.0",

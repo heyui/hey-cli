@@ -12,7 +12,7 @@ var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HtmlWebpackCDNPlugin = require('./plugins/HtmlWebpackCDNPlugin');
-var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // var UglifyJsParallelPlugin = require('webpack-uglify-parallel');
 // var LessLoaderGlobalPlugin = require('./plugins/LessLoaderGlobalPlugin');
 // var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
@@ -149,15 +149,14 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
   if (!isDebug) {
     genWebpackConfig.plugins.push(
-      // new UglifyJsParallelPlugin({
-      //   workers: os.cpus().length,
-      //   mangle: true,
-      //   compressor: {
-      //     warnings: false,
-      //     drop_console: !webpackConfig.console,
-      //     drop_debugger: true
-      //   }
-      // }),
+      new UglifyJsPlugin({
+        compress: {
+          warnings: false,
+          drop_debugger: true,
+          drop_console: !config.console
+        },
+        sourceMap: false
+      }),
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
           safe: true
