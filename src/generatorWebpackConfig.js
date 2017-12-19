@@ -141,6 +141,16 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     ],
   };
 
+  if(webpackConfig.plugins) {
+    genWebpackConfig.plugins = genWebpackConfig.plugins.concat(webpackConfig.plugins);
+  }
+
+  if(webpackConfig.module) {
+    for(var m in webpackConfig.module) {
+      genWebpackConfig.module[m] = webpackConfig.module[m];
+    }
+  }
+
   let stylels = webpackUtils.styleLoaders(stylelOptions);
 
   for (var i = 0; i < stylels.length; i++) {

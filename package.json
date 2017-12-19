@@ -1,6 +1,6 @@
 {
   "name": "hey-cli",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "webpack脚手架，hot-dev-server，build",
   "keywords": [
     "webpack",
@@ -49,7 +49,7 @@
     "css-loader": "^0.23.1",
     "download-git-repo": "^0.2.1",
     "ejs-loader": "^0.2.1",
-    "exports-loader": "^0.6.2",
+    "exports-loader": "^0.6.4",
     "expose-loader": "^0.7.1",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.8.5",
@@ -89,9 +89,9 @@
     "url": "^0.11.0",
     "url-loader": "^0.5.7",
     "user-home": "^2.0.0",
-    "vue-loader": "^12.2.0",
+    "vue-loader": "^12.2.2",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.3.3",
+    "vue-template-compiler": "^2.5.11",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.4",
     "webpack-merge": "^4.1.0"
