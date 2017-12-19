@@ -226,3 +226,18 @@ hey dev
 ```sh
 hey build
 ```
+
+## 注意事项
+
+对于vue的项目，项目本身需要安装与vue版本对应的 <code>vue-template-compiler</code> 包。  
+如果您的项目使用的是最新版本的vue，则请使用以下命令执行安装  
+
+```sh
+npm install --save vue
+npm install --save-dev vue-template-compiler
+```
+如果您的项目使用的是固定版本的vue，则请使用以下命令执行安装  
+```sh
+npm install --save vue@版本号
+npm install --save-dev vue-template-compiler@版本号
+```
