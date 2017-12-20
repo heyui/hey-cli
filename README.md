@@ -1,13 +1,16 @@
 # hey-cli
-webpack脚手架，hot-dev-server，build。  
+webpack脚手架，hot-dev-server，build。
 不需要理解webpack，只需要知道如何配置就可以使用，摆脱繁琐重复的webpack配置。   
 
 
 ## 特性
-全局安装，所有的项目都将支持，不需要每个项目都安装配置webpack。    
-支持<code>ES6</code>，热替换，反向代理，默认支持<code>vue2.0</code>，支持<code>react</code>项目。  
-只需要在package.json中配置<code>hey</code>属性，或者在项目根目录下添加<code>hey.js</code>配置文件即可。  
-可以用于打包UMD模式的公用包。
+- 一次全局安装，所有的开发项目都支持，不需要每个项目都安装配置webpack。    
+- 支持<code>ES6</code>
+- 支持热替换
+- 支持反向代理
+- 默认支持<code>vue2.0</code>，支持<code>react</code>
+- 构建UMD模式的代码。
+- 只需要配置<code>hey.js</code>配置文件即可使用
 
 ## 安装
 
@@ -17,8 +20,7 @@ npm install -g hey-cli
 
 ## 配置
 
-### 方式一：hey.js
-请在项目根目录下添加hey.js配置文件。 
+在项目根目录下添加hey.js配置文件。 
 ```js
 module.exports = {
 	//端口号
@@ -93,49 +95,19 @@ module.exports = {
   ]
 };
 ```
-*webpack下的参数：node, externals, stats, target, devtool, performance将直接定义至webpack配置项中。*
 
-### 方式二：package.json
-在package.json中添加属性hey：  
-注：推荐使用hey.js方式配置，因为json文件没有办法添加注释，并且不能注释代码，不方便调试。
-
-```javascript
-"hey": {
-  port: 9008,
-  timestamp: true,
-  dist: "gen",
-  webpack: {
-    publicPath: "/",
-    output: {
-      "./*html": {
-        entry: "./src/app"
-      }
-    },
-    commonTrunk: {
-      vuec: ["vue-router"]
-    },
-    global: {
-      Vue: "vue"
-    },
-    devServer: {
-      historyApiFallback: true
-    },
-    externals: {
-      Vue: "window.Vue",
-      VueRouter: "window.VueRouter"
-    }
-  },
-  copy: ["./static/images/**/*"]
-}
-```
-
-### 说明
-
-devServer可以配置，具体请前往[webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html)
+### 扩展配置
+可以在hey.js中webpack配置项中扩张配置以下属性：
+- plugins
+- module
+- node
+- externals
+- devServer
+具体使用，请参照[webpack](https://webpack.js.org/)文档.
 
 ## 示例
 
-### 加载vue,vue-router  
+### 加载vue,vue-router
 
 ```json
 "hey": {
@@ -192,8 +164,8 @@ devServer可以配置，具体请前往[webpack-dev-server](https://webpack.gith
 }
 ```
 
-### 打包UMD模式的公用包
-主要用于一些自己开发的公用包，简单配置即可使用。  
+### 构建UMD模式的公用代码
+主要用于构建一些的公用代码，简单配置即可使用。  
 *由于是打包成UMD模式的公用包，请不要使用import模式。*
 
 ```js
@@ -203,7 +175,7 @@ module.exports = {
     umd: {
       entry: "./src/index.js",
       library: "Validator",
-      filename: 'validator.js' //该文件将生成为/build/validator.js
+      filename: 'validator.js' //build后将生成/build/validator.js
     },
     externals: {
       "manba": "manba"  //该依赖包将不会打包进源码中
