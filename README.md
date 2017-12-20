@@ -194,7 +194,7 @@ hey dev
 hey build
 ```
 
-## 注意事项
+## Attention
 
 For the Vue project, the project itself needs to install the <code>vue-template-compiler</code> package corresponding to the Vue version.
 If your project is using the latest version of vue, use the following command to perform the installation 
