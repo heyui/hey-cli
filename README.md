@@ -1,5 +1,5 @@
 # hey-cli
-webpack scaffolding, hot-dev-server, build.  
+Webpack scaffolding, hot-dev-server, build.  
 Do not need to understand webpack, only need to know how to configure it to use, get rid of cumbersome duplication of webpack configuration.
 
 ## 中文文档
@@ -11,7 +11,7 @@ Do not need to understand webpack, only need to know how to configure it to use,
 - Support <code>ES6</code>
 - Support Hot Module Replacement
 - Support Http Proxy
-- Default support<code>vue2.0</code>, support<code>react</code>
+- Default support <code>vue2.0</code>, support <code>react</code>
 - Support the global less parameter definition
 - Build UMD mode code
 - Only need to configure <code>hey.js</code> configuration file
@@ -59,19 +59,19 @@ module.exports = {
       ]
     },
 
-    //define resolve, [document](https://webpack.js.org/configuration/resolve/)
+    //define resolve, https://webpack.js.org/configuration/resolve/
     "resolve": {
       "alias": {}
     },
 
-    //define global, [document](https://webpack.js.org/plugins/provide-plugin) 
+    //define global, https://webpack.js.org/plugins/provide-plugin
     "global": {
       "Vue": "vue",
       "$": "jquery",
       "log": "./js/common/log"
     },
 
-    //define proxy, [document](https://webpack.js.org/configuration/dev-server/#devserver-proxy)
+    //define proxy, https://webpack.js.org/configuration/dev-server/#devserver-proxy
     "devServer": {
       "proxy": {
         "/api": {
@@ -80,7 +80,7 @@ module.exports = {
       },
       historyApiFallback: true
     },
-    //define externals, [document](https://webpack.js.org/configuration/externals/)
+    //define externals, https://webpack.js.org/configuration/externals/
     "externals":{
 
     },

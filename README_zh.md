@@ -57,19 +57,19 @@ module.exports = {
       ]
     },
 
-    //定义resolve，[文档](https://webpack.js.org/configuration/resolve/)
+    //定义resolve，https://webpack.js.org/configuration/resolve/
     "resolve": {
       "alias": {}
     },
 
-    //定义全局变量, [文档](https://webpack.js.org/plugins/provide-plugin) 
+    //定义全局变量, https://webpack.js.org/plugins/provide-plugin
     "global": {
       "Vue": "vue",
       "$": "jquery",
       "log": "./js/common/log"
     },
 
-    //定义反向代理服务器， [文档](https://webpack.js.org/configuration/dev-server/#devserver-proxy)
+    //定义反向代理服务器，https://webpack.js.org/configuration/dev-server/#devserver-proxy
     "devServer": {
       "proxy": {
         //设定/api开头的url向定义的接口请求
@@ -79,7 +79,7 @@ module.exports = {
       },
       historyApiFallback: true
     },
-    //定义外部引用，[文档](https://webpack.js.org/configuration/externals/)
+    //定义外部引用，https://webpack.js.org/configuration/externals/
     "externals":{
 
     },
