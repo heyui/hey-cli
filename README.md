@@ -1,5 +1,5 @@
 # hey-cli
-webpack scaffolding, hot-dev-server, build.
+webpack scaffolding, hot-dev-server, build.  
 Do not need to understand webpack, only need to know how to configure it to use, get rid of cumbersome duplication of webpack configuration.
 
 ## 中文文档
@@ -24,7 +24,7 @@ npm install -g hey-cli
 
 ## Configuration
 
-Add the hey.js configuration file in the project root directory.
+Add the hey.js configuration file in the project root directory.  
 ```js
 module.exports = {
   "port": 9002, //Port
@@ -99,7 +99,7 @@ module.exports = {
 ```
 
 ### Extended Configuration
-You can expand and configure the following properties in the webpack configuration item in hey.js:
+You can expand and configure the following properties in the webpack configuration item in hey.js:  
 - plugins
 - module
 - node
@@ -166,7 +166,7 @@ Specific use, please refer to [webpack](https://webpack.js.org/) document.
 ```
 
 ### Common code to build UMD mode
-Mainly used to build some of the common code, simple configuration can be used. 
+Mainly used to build some of the common code, simple configuration can be used.   
 *Because it is a public package packaged into UMD mode, do not use the import mode.*
 
 ```js
@@ -196,7 +196,7 @@ hey build
 
 ## Attention
 
-For the Vue project, the project itself needs to install the <code>vue-template-compiler</code> package corresponding to the Vue version.
+For the Vue project, the project itself needs to install the <code>vue-template-compiler</code> package corresponding to the Vue version.  
 If your project is using the latest version of vue, use the following command to perform the installation 
 
 ```sh
