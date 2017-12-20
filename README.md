@@ -206,6 +206,6 @@ npm install --save-dev vue-template-compiler
 
 If your project uses a fixed version of vue, use the following command to perform the installation
 ```sh
-npm install --save vue@版本号
-npm install --save-dev vue-template-compiler@版本号
+npm install --save vue@version
+npm install --save-dev vue-template-compiler@version
 ```
