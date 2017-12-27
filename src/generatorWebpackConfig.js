@@ -163,7 +163,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         compress: {
           warnings: false,
           drop_debugger: true,
-          drop_console: !config.console
+          drop_console: !webpackConfig.console
         },
         sourceMap: false
       }),

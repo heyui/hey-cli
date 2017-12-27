@@ -192,7 +192,7 @@ module.exports = {
 hey dev
 hey build
 ```
-
+<!-- 
 ## 注意事项
 
 对于vue的项目，项目本身需要安装与vue版本对应的 <code>vue-template-compiler</code> 包。  
@@ -206,4 +206,4 @@ npm install --save-dev vue-template-compiler
 ```sh
 npm install --save vue@版本号
 npm install --save-dev vue-template-compiler@版本号
-```
+``` -->

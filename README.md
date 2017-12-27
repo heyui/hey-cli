@@ -193,7 +193,7 @@ Start webpack server
 hey dev
 hey build
 ```
-
+<!-- 
 ## Attention
 
 For the Vue project, the project itself needs to install the <code>vue-template-compiler</code> package corresponding to the Vue version.  
@@ -208,4 +208,4 @@ If your project uses a fixed version of vue, use the following command to perfor
 ```sh
 npm install --save vue@version
 npm install --save-dev vue-template-compiler@version
-```
+``` -->

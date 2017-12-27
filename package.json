@@ -75,6 +75,7 @@
     "precss": "^1.4.0",
     "react": "^15.6.1",
     "react-transform-hmr": "^1.0.1",
+    "regenerator-runtime": "^0.11.1",
     "rimraf": "^2.5.1",
     "save": "^2.3.1",
     "script-loader": "^0.7.0",
@@ -91,7 +92,7 @@
     "user-home": "^2.0.0",
     "vue-loader": "^12.2.2",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.5.11",
+    "vue-template-compiler": "^2.5.13",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.4",
     "webpack-merge": "^4.1.0"
