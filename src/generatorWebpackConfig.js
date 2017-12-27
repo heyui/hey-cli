@@ -38,7 +38,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
   };
 
   if (webpackConfig.globalVars) {
-    stylelOptions.globalVars = require("./util/less-utils")(path.resolve(webpackConfig.globalVars));
+    stylelOptions.globalVars = require("./util/less-utils")(path.resolve(webpackConfig.globalVars), {}, isDebug);
   }
 
   var genWebpackConfig = {

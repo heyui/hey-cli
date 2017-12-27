@@ -63,7 +63,7 @@ module.exports = {
     logger.debug('webpack dev server start with config: ');
     serverCfg.disableHostCheck = true;
     serverCfg.compress = true;
-    serverCfg.setup = function(app){
+    serverCfg.before = function(app){
       app.use(function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
@@ -103,12 +103,23 @@ module.exports = {
   webpackPack(config, args) {
     logger.info('start build project... ');
     var compiler = webpack(config.webpack);
+
+    var ProgressBar = require('progress');
+    var bar = new ProgressBar('  building [:bar] :percent :etas', { 
+      complete: '=',
+      incomplete: ' ',
+      total: 100
+    });
+    let logError = global.console.error;
+    global.console.error = function(){}
     
     compiler.apply(new ProgressPlugin(function(percentage, msg, msg2, msg3, msg4) {
-      logger.info((percentage * 100) + '%', msg, msg2||"");
+      // logger.info((percentage * 100) + '%', msg, msg2||"");
+      bar.update(percentage);
     }));
     
     compiler.run((err, stats) => {
+      global.console.error = logError;
       if (err) {
         logger.error(err);
       }

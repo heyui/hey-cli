@@ -5,7 +5,7 @@ var paths=require("./path");
 var logger = require('../logger');
 
 
-module.exports = function (source,query) {
+module.exports = function (source,query,isDebug) {
   query = query || {};
   var camelCase = query.camelCase || false;
   var lessVars = {};
@@ -32,8 +32,9 @@ module.exports = function (source,query) {
           lessVars[name] = value.toCSS();
         }
       });
-
-      logger.info("修改全局定义的less参数后记得重启~~~");
+      if(isDebug){
+        logger.info("修改全局定义的less参数后记得重启~~~");
+      }
       // logger.info("全局定义的less参数:", Object.keys(lessVars).join(','));
       // console.log(lessVars);
     } catch (err) {
