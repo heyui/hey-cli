@@ -1,6 +1,6 @@
 {
   "name": "hey-cli",
-  "version": "1.0.25",
+  "version": "1.1.0",
   "description": "webpack脚手架，hot-dev-server，build",
   "keywords": [
     "webpack",
@@ -13,7 +13,9 @@
   "bin": {
     "hey": "bin/hey.js"
   },
-  "scripts": {},
+  "scripts": {
+    "version": "standard-version"
+  },
   "author": "vvpvvp",
   "email": "alias8516@sina.com.com",
   "bugs": "https://github.com/heyui/hey-cli/issues",
@@ -65,7 +67,7 @@
     "json-loader": "^0.5.7",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
-    "log4js": "^1.1.1",
+    "log4js": "^2.5.3",
     "metalsmith": "^2.3.0",
     "node-less": "^1.0.0",
     "optimize-css-assets-webpack-plugin": "^1.3.2",
@@ -74,6 +76,7 @@
     "postcss-loader": "^0.8.2",
     "precss": "^1.4.0",
     "progress": "^2.0.0",
+    "prompt-list": "^3.1.2",
     "react": "^15.6.2",
     "react-transform-hmr": "^1.0.4",
     "regenerator-runtime": "^0.11.1",
