@@ -192,18 +192,21 @@ module.exports = {
 hey dev
 hey build
 ```
-<!-- 
-## 注意事项
 
-对于vue的项目，项目本身需要安装与vue版本对应的 <code>vue-template-compiler</code> 包。  
-如果您的项目使用的是最新版本的vue，则请使用以下命令执行安装  
+## 生成模板
+根据已有的模板生成项目
 
 ```sh
-npm install --save vue
-npm install --save-dev vue-template-compiler
+hey init <projectname>
 ```
-如果您的项目使用的是固定版本的vue，则请使用以下命令执行安装  
-```sh
-npm install --save vue@版本号
-npm install --save-dev vue-template-compiler@版本号
-``` -->
+
+现有模板
+
+- Simple: 基础的ES6项目
+- HeyUI: HeyUI项目
+- Vue: 基础的Vue项目
+- React: 基础的React项目
+- ElementUI: Element项目
+- iViewUI: iViewUI项目
+
+具体项目请参考[hey-cli-template](https://github.com/heyui/hey-cli-template)。

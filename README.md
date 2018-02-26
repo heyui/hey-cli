@@ -193,19 +193,21 @@ Start webpack server
 hey dev
 hey build
 ```
-<!-- 
-## Attention
 
-For the Vue project, the project itself needs to install the <code>vue-template-compiler</code> package corresponding to the Vue version.  
-If your project is using the latest version of vue, use the following command to perform the installation 
+## Generate Project
+Generate project useing template.
 
 ```sh
-npm install --save vue
-npm install --save-dev vue-template-compiler
+hey init <projectname>
 ```
 
-If your project uses a fixed version of vue, use the following command to perform the installation
-```sh
-npm install --save vue@version
-npm install --save-dev vue-template-compiler@version
-``` -->
+The current template
+
+- Simple: Base ES6 project
+- HeyUI: HeyUI project
+- Vue: Base Vue project
+- React: Base React project
+- ElementUI: Element project
+- iViewUI: iViewUI project
+
+For specific projects, please refer to [hey-cli-template](https://github.com/heyui/hey-cli-template)。
