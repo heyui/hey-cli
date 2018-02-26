@@ -7,6 +7,8 @@ var fs = require('fs-extra');
 var fss = require("fs");
 var rimraf = require('rimraf');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
+var chalk = require('chalk');
+var open = require('open');
 
 
 module.exports = {
@@ -21,9 +23,13 @@ module.exports = {
     var webpack_config = config.webpack;
 
     try {
-      // console.log(webpack_config.process);
-      // webpack_config.process = {};
-      var compiler = webpack(webpack_config);
+      var compiler = webpack(webpack_config, (err, stats) => {
+        if (err || stats.hasErrors()) {
+          // 在这里处理错误
+        }
+        open("http://localhost:"+config.config.port)
+        // 处理完成
+      });
     } catch (e) {
       logger.error(e);
     }
@@ -36,7 +42,12 @@ module.exports = {
       },
       stats: {
         colors: true
-      }
+      },
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type,Content-Length, Authorization, Accept,X-Requested-With",
+        "Access-Control-Allow-Methods": "PUT,POST,GET,DELETE,OPTIONS",
+      },
     }
     var devServer = config.config.webpack.devServer;
     if (devServer) {
@@ -57,20 +68,18 @@ module.exports = {
         }
       }
     }
-    // logger.info(serverCfg);
-    // console.log(serverCfg);
 
     logger.debug('webpack dev server start with config: ');
     serverCfg.disableHostCheck = true;
     serverCfg.compress = true;
-    serverCfg.before = function(app){
-      app.use(function(req, res, next) {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-        res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-        next();
-      });
-    }
+    // serverCfg.before = function(app){
+    //   app.use(function(req, res, next) {
+    //     res.header("Access-Control-Allow-Origin", "*");
+    //     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    //     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    //     next();
+    //   });
+    // }
     new WebpackDevServer(compiler, serverCfg).listen(config.config.port, '::', (err) => {
       if (err) {
         logger.error(err);
@@ -78,7 +87,7 @@ module.exports = {
       }
 
       logger.info('----------------------------------');
-      logger.info(`Server listening at localhost:${config.config.port}`);
+      logger.info('Starting server on ' + chalk.bold.red("http://localhost:"+config.config.port));
       logger.info('----------------------------------');
     });
   },

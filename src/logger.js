@@ -3,12 +3,12 @@ log4js.configure({
   appenders: {
     out: { type: 'stdout', layout: {
       type: 'pattern',
-      pattern: '%[%c%]: %m'
+      pattern: '%[%c%] %m'
     }}
   },
   categories: {
     default: { appenders: ['out'], level: 'info' }
   }
 });
-var logger = log4js.getLogger('[hey]');
+var logger = log4js.getLogger('[HEY]');
 module.exports = logger;
