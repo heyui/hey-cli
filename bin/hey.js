@@ -49,7 +49,7 @@ function printHelp() {
 
 
 function execTask(cmd) {
-  console.log(chalk.bold.red('HEY CLI v' + require('../package').version));
+  console.log(chalk.bold.bgRed(' HEY CLI v' + require('../package').version +' '));
   var file = path.join(__dirname, `/hey-${cmd}.js`);
   fs.stat(file, (err) => {
     if (err) {
