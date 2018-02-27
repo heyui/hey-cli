@@ -23,13 +23,7 @@ module.exports = {
     var webpack_config = config.webpack;
 
     try {
-      var compiler = webpack(webpack_config, (err, stats) => {
-        if (err || stats.hasErrors()) {
-          // 在这里处理错误
-        }
-        open("http://localhost:"+config.config.port)
-        // 处理完成
-      });
+      var compiler = webpack(webpack_config);
     } catch (e) {
       logger.error(e);
     }
@@ -80,6 +74,11 @@ module.exports = {
     //     next();
     //   });
     // }
+    compiler.apply(new ProgressPlugin(function(percentage, msg, msg2, msg3, msg4) {
+      if(percentage == 1) {
+        open("http://localhost:"+config.config.port)
+      }
+    }));
     new WebpackDevServer(compiler, serverCfg).listen(config.config.port, '::', (err) => {
       if (err) {
         logger.error(err);
@@ -119,7 +118,7 @@ module.exports = {
       incomplete: ' ',
       total: 100
     });
-    let logError = global.console.error;
+    var logError = global.console.error;
     global.console.error = function(){}
     
     compiler.apply(new ProgressPlugin(function(percentage, msg, msg2, msg3, msg4) {
