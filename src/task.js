@@ -74,9 +74,11 @@ module.exports = {
     //     next();
     //   });
     // }
+    var isOpened = false;
     compiler.apply(new ProgressPlugin(function(percentage, msg, msg2, msg3, msg4) {
-      if(percentage == 1) {
-        open("http://localhost:"+config.config.port)
+      if(percentage == 1 && !isOpened) {
+        open("http://localhost:"+config.config.port);
+        isOpened = true;
       }
     }));
     new WebpackDevServer(compiler, serverCfg).listen(config.config.port, '::', (err) => {

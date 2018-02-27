@@ -66,7 +66,12 @@ enquirer.run()
       if (err) logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
       generate(name, tmplType, tmp, to, function (err) {
         if (err) logger.fatal(err)
-        logger.info('Project %s generation success.', name)
+        logger.info('Project %s generation success.', name);
+        console.log('====================================');
+        console.log('  cd %s', name);
+        console.log('  npm install');
+        console.log('  hey dev');
+        console.log('====================================');
       })
     })
   }
