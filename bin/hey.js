@@ -38,7 +38,7 @@ if (!subcmd || subcmd === 'help') {
 
 function printHelp() {
   console.log();
-  console.log('  Package Commands:'.to.bold.green.color);
+  console.log('  Package Commands:');
   console.log();
   console.log('    init           generate the dir structure');
   console.log('    dev            develop with a dev server');

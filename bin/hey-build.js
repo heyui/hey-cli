@@ -1,5 +1,6 @@
-require('colorful').colorful();
+#!/usr/bin/env node
 
+require('colorful').colorful();
 var program = require('commander');
 var task = require('../src/task');
 var logger = require('../src/logger');
