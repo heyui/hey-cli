@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/heyui/hey-cli/compare/v1.2.0...v1.2.1) (2018-02-28)
+
+
+### Bug Fixes
+
+* hey-build 添加 #!/usr/bin/env node ([1e4567a](https://github.com/heyui/hey-cli/commit/1e4567a))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/heyui/hey-cli/compare/v1.1.0...v1.2.0) (2018-02-27)
 

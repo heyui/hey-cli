@@ -1,6 +1,6 @@
 {
   "name": "hey-cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "webpack脚手架，hot-dev-server，build",
   "keywords": [
     "webpack",
