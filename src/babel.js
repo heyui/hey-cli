@@ -1,6 +1,6 @@
 module.exports = (conf, isDebug) => {
   var babelConfig = {babelrc: false,forceEnv:true};
-  babelConfig.presets = [require.resolve('babel-preset-es2015'),require.resolve('babel-preset-stage-2')];
+  babelConfig.presets = [require.resolve('babel-preset-env')];
   // babelConfig.presets = [require.resolve('babel-preset-es2015'),require.resolve('babel-preset-stage-0')];
 
   if(conf.react){

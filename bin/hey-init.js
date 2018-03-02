@@ -61,9 +61,12 @@ enquirer.run()
   function downloadAndGenerate(template) {
     var spinner = ora('downloading template....')
     spinner.start()
-    download(template, tmp, { clone: clone }, function (err) {
+    download('github:'+template, tmp, { clone: clone }, function (err) {
       spinner.stop()
-      if (err) logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
+      if (err){
+        logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
+        return;
+      }
       generate(name, tmplType, tmp, to, function (err) {
         if (err) logger.fatal(err)
         logger.info('Project %s generation success.', name);
