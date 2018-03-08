@@ -2,6 +2,7 @@
 
 require('colorful').colorful();
 var List = require('prompt-list');
+var rimraf = require('rimraf');
 
 var path = require('path');
 var ora = require('ora');
@@ -42,31 +43,34 @@ var gitUrl = program.args[1];
 function dl(template, tmplType) {
   var inPlace = !rawName || rawName === '.';
   var name = inPlace ? path.relative('../', process.cwd()) : rawName;
-  var tmp = path.join(home, '.hey-cli-template');
-  var to = path.resolve(rawName || '.');
-  var spinner = ora('downloading template....')
-  spinner.start()
-  download(template, tmp, { clone: false }, function (err) {
-    spinner.stop()
-    if (err){
-      logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
-      return;
-    }
-    generate(name, tmplType, tmp, to, function (err) {
-      if (err) logger.fatal(err)
-      logger.info('Project %s generation success.', name);
-      console.log('====================================');
-      console.log('  cd %s', name);
-      if(gitUrl) {
-        console.log('');
-        console.log('  If this is a webpack project, please use use the following commands: ');
-        console.log('');
+  var tmp = path.join(home, '.hey-cli', template);
+  rimraf(tmp, () => {
+    var to = path.resolve(rawName || '.');
+    var spinner = ora('downloading template....')
+    spinner.start()
+    download(template, tmp, { clone: false }, function (err) {
+      spinner.stop()
+      if (err){
+        logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
+        return;
       }
-      console.log('  npm install');
-      console.log('  hey dev');
-      console.log('====================================');
+      generate(name, tmplType, tmp, to, function (err) {
+        if (err) logger.fatal(err)
+        logger.info('Project %s generation success.', name);
+        console.log('====================================');
+        console.log('  cd %s', name);
+        if(gitUrl) {
+          console.log('');
+          console.log('  If this is a webpack project, please use use the following commands: ');
+          console.log('');
+        }
+        console.log('  npm install');
+        console.log('  hey dev');
+        console.log('====================================');
+      })
     })
   })
+  
 }
 
 if(!gitUrl) {
