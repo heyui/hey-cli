@@ -21,6 +21,16 @@ function getConfig(args, isDebug) {
 
   if (source == false) {
     try {
+      conf = require(path.join(process.cwd(), 'hey.conf.js'));
+      source = true;
+    } catch (ex) {
+      error = ex;
+      source = false;
+    }
+  }
+
+  if (source == false) {
+    try {
       json = require(path.join(process.cwd(), 'package.json'));
       if(json.hey){
         conf = json.hey;
@@ -31,8 +41,9 @@ function getConfig(args, isDebug) {
       source = false;
     }
   }
+
   if (!source) {
-    logger.error("Can't find hey.js or package.json 'hey' param. ");
+    logger.error("Can't find hey.conf.js or package.json 'hey' param. ");
     return false;
   }
   var defaultConfig = require('./default/package.default.js');
