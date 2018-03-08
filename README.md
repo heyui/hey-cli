@@ -14,7 +14,7 @@ Do not need to understand webpack, only need to know how to configure it to use,
 - Default support <code>vue2.0</code>, support <code>react</code>
 - Support the global less parameter definition
 - Build UMD mode code
-- Only need to configure <code>hey.js</code> configuration file
+- Only need to configure <code>hey.conf.js</code> configuration file
 
 ## Installation
 
@@ -24,7 +24,7 @@ npm install -g hey-cli
 
 ## Configuration
 
-Add the hey.js configuration file in the project root directory.  
+Add the hey.conf.js configuration file in the project root directory.  
 ```js
 module.exports = {
   "port": 9002, //Port
@@ -99,7 +99,7 @@ module.exports = {
 ```
 
 ### Extended Configuration
-You can expand and configure the following properties in the webpack configuration item in hey.js:  
+You can expand and configure the following properties in the webpack configuration item in hey.conf.js:  
 - plugins
 - module
 - node
@@ -198,7 +198,9 @@ hey build
 Generate project useing template.
 
 ```sh
-hey init <projectname>
+hey init <project-name>
+hey init <project-name> <github-url>
+# hey init test heyui/hey-cli-template
 ```
 
 The current template

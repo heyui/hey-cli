@@ -12,7 +12,7 @@ var generate = require('../src/util/generate');
 var download = require('download-git-repo');
 
 program
-  .usage('<project-name>')
+  .usage('<project-name> <git-url>')
   .parse(process.argv);
 
 program.on('--help', function () {
@@ -25,6 +25,9 @@ program.on('--help', function () {
   console.log('    - template: ElementUI');
   console.log('    - template: iViewUI');
   console.log()
+  console.log('    # create a new project with github');
+  console.log('    - hey init test heyui/hey-cli-template');
+  console.log()
 })
 
 function help() {
@@ -33,54 +36,63 @@ function help() {
 }
 help()
 
-var enquirer = new List({
-  name: 'Templates',
-  message: 'Which template would you like to choose?',
-  choices: [
-    'Simple',
-    'HeyUI',
-    'Vue',
-    'React',
-    'ElementUI',
-    'iViewUI'
-  ]
-});
+var rawName = program.args[0];
+var gitUrl = program.args[1];
 
-enquirer.run()
-.then(function(answers) {
-  logger.info('Use Template ' + answers);
-  // download template
-  var tmplType = answers.toLowerCase();
-  var rawName = program.args[0];
+function dl(template, tmplType) {
   var inPlace = !rawName || rawName === '.';
   var name = inPlace ? path.relative('../', process.cwd()) : rawName;
+  var tmp = path.join(home, '.hey-cli-template');
   var to = path.resolve(rawName || '.');
-  var clone = program.clone || false;
-  var tmp = path.join(home, '.hey-cli-template')
-
-  function downloadAndGenerate(template) {
-    var spinner = ora('downloading template....')
-    spinner.start()
-    download('github:'+template, tmp, { clone: clone }, function (err) {
-      spinner.stop()
-      if (err){
-        logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
-        return;
+  var spinner = ora('downloading template....')
+  spinner.start()
+  download(template, tmp, { clone: false }, function (err) {
+    spinner.stop()
+    if (err){
+      logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
+      return;
+    }
+    generate(name, tmplType, tmp, to, function (err) {
+      if (err) logger.fatal(err)
+      logger.info('Project %s generation success.', name);
+      console.log('====================================');
+      console.log('  cd %s', name);
+      if(gitUrl) {
+        console.log('');
+        console.log('  If this is a webpack project, please use use the following commands: ');
+        console.log('');
       }
-      generate(name, tmplType, tmp, to, function (err) {
-        if (err) logger.fatal(err)
-        logger.info('Project %s generation success.', name);
-        console.log('====================================');
-        console.log('  cd %s', name);
-        console.log('  npm install');
-        console.log('  hey dev');
-        console.log('====================================');
-      })
+      console.log('  npm install');
+      console.log('  hey dev');
+      console.log('====================================');
     })
-  }
+  })
+}
 
-  downloadAndGenerate('heyui/hey-cli-template');
-})
-.catch(function(err) {
-  console.log(err);
-});
+if(!gitUrl) {
+  var enquirer = new List({
+    name: 'Templates',
+    message: 'Which template would you like to choose?',
+    choices: [
+      'Simple',
+      'HeyUI',
+      'Vue',
+      'React',
+      'ElementUI',
+      'iViewUI'
+    ]
+  });
+  
+  enquirer.run()
+  .then(function(answers) {
+    logger.info('Use Template ' + answers);
+    // download template
+    var tmplType = answers.toLowerCase();
+    dl('heyui/hey-cli-template', tmplType);
+  })
+  .catch(function(err) {
+    console.log(err);
+  });
+} else {
+  dl(gitUrl, '');
+}

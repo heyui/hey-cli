@@ -11,7 +11,7 @@ webpack脚手架，hot-dev-server，build。
 - 默认支持<code>vue2.0</code>，支持<code>react</code>
 - 支持全局less变量定义
 - 构建UMD模式的代码。
-- 只需要配置<code>hey.js</code>配置文件即可使用
+- 只需要配置<code>hey.conf.js</code>配置文件即可使用
 
 ## 安装
 
@@ -21,7 +21,7 @@ npm install -g hey-cli
 
 ## 配置
 
-在项目根目录下添加hey.js配置文件。 
+在项目根目录下添加hey.conf.js配置文件。 
 ```js
 module.exports = {
 	//端口号
@@ -98,7 +98,7 @@ module.exports = {
 ```
 
 ### 扩展配置
-可以在hey.js中webpack配置项中扩张配置以下属性：
+可以在hey.conf.js中webpack配置项中扩张配置以下属性：
 - plugins
 - module
 - node
@@ -197,7 +197,9 @@ hey build
 根据已有的模板生成项目
 
 ```sh
-hey init <projectname>
+hey init <project-name>
+hey init <project-name> <github-url>
+# hey init test heyui/hey-cli-template
 ```
 
 现有模板
