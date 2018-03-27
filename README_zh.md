@@ -17,6 +17,8 @@ webpack脚手架，hot-dev-server，build。
 
 ```sh
 npm install -g hey-cli
+# 新版本 npm
+sudo npm install -g hey-cli --unsafe-perm=true --allow-root
 ```
 
 ## 配置

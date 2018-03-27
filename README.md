@@ -20,6 +20,10 @@ Do not need to understand webpack, only need to know how to configure it to use,
 
 ```sh
 npm install -g hey-cli
+
+# new version npm
+sudo npm install -g hey-cli --unsafe-perm=true --allow-root
+
 ```
 
 ## Configuration
