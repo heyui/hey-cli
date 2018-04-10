@@ -199,7 +199,7 @@ hey build
 ```
 
 ## Generate Project
-Generate project useing template.
+Generate project using template.
 
 ```sh
 hey init <project-name>
