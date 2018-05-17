@@ -198,6 +198,13 @@ hey dev
 hey build
 ```
 
+## Parameter
+
+``` javascript
+//Identification is a development environment, or a production environment
+const debug = process.env.NODE_ENV == 'development';
+```
+
 ## Generate Project
 Generate project using template.
 
