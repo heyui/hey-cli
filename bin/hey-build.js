@@ -10,7 +10,8 @@ var exec = require('child_process').exec;
 
 program
   .usage('[options]')
-  .option('-C, --no-clean', 'disable clean before a new build')
+  .option('-C, --clean', 'clean before a new build')
+  .option('-f, --file', 'define the config file')
   .on('-h', printHelp)
   .on('--help', printHelp)
   .parse(process.argv);
@@ -18,14 +19,15 @@ program
 function printHelp() {
   console.log('  Examples:'.to.bold.green.color);
   console.log();
-  console.log('    hey build -C     clean before a new build ');
+  console.log('    hey build -C    clean before a new build ');
   console.log();
 }
 
 var args = {
   sourcemap: !!program.sourcemap,
   clean: !!program.clean,
-  uglify: !!program.uglify
+  uglify: !!program.uglify,
+  file: program.args[0],
 }
 
 logger.debug("hey build with options: ");

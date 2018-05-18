@@ -8,15 +8,30 @@ function getConfig(args, isDebug) {
   var conf = null;
 
   var json = {};
-  var source = true;
+  var source = false;
   var error = null;
+  if(args.file) {
+    try {
+      conf = require(path.join(process.cwd(), args.file));
+      source = true;
+    } catch (ex) {
+      error = ex;
+      logger.error("Error: ", ex.toString());
+      source = false;
+    }
+    if(source==false) {
+      return false;
+    }
+  }
 
-  try {
-    conf = require(path.join(process.cwd(), 'hey.js'));
-    source = true;
-  } catch (ex) {
-    error = ex;
-    source = false;
+  if (source == false) {
+    try {
+      conf = require(path.join(process.cwd(), 'hey.js'));
+      source = true;
+    } catch (ex) {
+      error = ex;
+      source = false;
+    }
   }
 
   if (source == false) {
@@ -43,9 +58,10 @@ function getConfig(args, isDebug) {
   }
 
   if (!source) {
-    logger.error("Can't find hey.conf.js or package.json 'hey' param. ");
+    logger.error("Can't find "+ (args.file ? (args.file+" or"):'') +" hey.conf.js or package.json 'hey' param. ");
     return false;
   }
+
   var defaultConfig = require('./default/package.default.js');
   conf = Utils.extend(true, {}, defaultConfig, conf);
   //端口号从命令中获取

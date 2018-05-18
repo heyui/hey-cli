@@ -193,6 +193,14 @@ module.exports = {
 ```sh
 hey dev
 hey build
+# 使用自定义的配置文件执行
+hey build -f index.esm.js
+```
+## 参数
+
+``` javascript
+//识别是开发环境，还是部署环境
+const debug = process.env.NODE_ENV == 'development'; //production
 ```
 
 ## 生成模板
@@ -202,12 +210,6 @@ hey build
 hey init <project-name>
 hey init <project-name> <github-url>
 # hey init test heyui/hey-cli-template
-```
-## 参数
-
-``` javascript
-//识别是开发环境，还是部署环境
-const debug = process.env.NODE_ENV == 'development';
 ```
 
 现有模板

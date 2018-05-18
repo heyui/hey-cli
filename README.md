@@ -196,13 +196,16 @@ Start webpack server
 ```sh
 hey dev
 hey build
+
+# use custom config file build project
+hey build -f index.esm.js
 ```
 
 ## Parameter
 
 ``` javascript
 //Identification is a development environment, or a production environment
-const debug = process.env.NODE_ENV == 'development';
+const debug = process.env.NODE_ENV == 'development'; //production
 ```
 
 ## Generate Project
