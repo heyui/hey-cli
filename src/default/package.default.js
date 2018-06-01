@@ -6,6 +6,7 @@ module.exports = {
   "es7": true, // support es7 async, object-rest-spread, flow-strip-types
   "root": "dist",
   "console": false,
+  "clean": true,
   "webpack": {
     sourceMap: false,
     "publicPath": '/',

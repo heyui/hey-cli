@@ -100,7 +100,7 @@ module.exports = {
     var config = generatorConfig('release', args);
     if(config === false) return;
     var webpackPack = this.webpackPack;
-    if (args.clean) {
+    if (args.clean || config.config.clean) {
       logger.info('start remove ' + config.config.root + ' folder. ');
       rimraf(config.config.root, () => {
         logger.info('build cleaned, removed ' + config.config.root + ' folder. ');
