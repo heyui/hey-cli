@@ -301,9 +301,17 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
 function initUmdOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
   let comObj = {};
   if (webpackConfig.umd) {
-    let file = webpackConfig.umd.entry;
+    let entrys = webpackConfig.umd.entry;
     let resObj = webpackConfig.umd;
-    genWebpack.entry = path.resolve(file);
+    if(Utils.isObject(entrys)) {
+      let entry = {};
+      for(let key in entrys){
+        entry[key] = path.resolve(entrys[key]);
+      }
+      genWebpack.entry = entry;
+    } else {
+      genWebpack.entry = path.resolve(entrys);
+    }
     genWebpack.output = {
       path: `${process.cwd()}/${config.root}`,
       filename: resObj.filename,
