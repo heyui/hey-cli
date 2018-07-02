@@ -47,7 +47,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
       path: `${process.cwd()}/${webpackConfig.root}/`,
       filename: `${config.jsPath}[name]${config.hashString}.js`,
       chunkFilename: `${config.jsPath}[name]${config.hashString}.js`,
-      publicPath: `${webpackConfig.publicPath}`
+      publicPath: isDebug ? '/':webpackConfig.publicPath
     },
     module: {
       rules: [{
