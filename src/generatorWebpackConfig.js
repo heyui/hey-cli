@@ -55,13 +55,13 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         loader: "url-loader",
         query: {
           limit: 10000,
-          name: `${config.staticPath}images/[name]${config.hashString}.[ext]`
+          name: `${config.staticPath}images/[path][name]${config.hashString}.[ext]`
         }
       }, {
         test: /\.(eot|otf|webp|ttf|woff|woff2)(\?.*)?$/,
         loader: "url-loader",
         query: {
-          name: `${config.staticPath}font/[name]${config.hashString}.[ext]`
+          name: `${config.staticPath}font/[path][name]${config.hashString}.[ext]`
         }
       }, {
         test: /\.vue$/,
