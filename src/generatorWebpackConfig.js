@@ -1,6 +1,6 @@
 var paths = require('./util/path.js');
 var Utils = require('./util/utils.js');
-var webpackUtils = require('./util/webpack-utils.js');
+var styleLoaderUtils = require('./util/style-loader-utils.js');
 var os = require('os');
 var path = require('path'),
   fs = require('fs'),
@@ -13,6 +13,7 @@ getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HtmlWebpackCDNPlugin = require('./plugins/HtmlWebpackCDNPlugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+var chalk = require('chalk');
 // var UglifyJsParallelPlugin = require('webpack-uglify-parallel');
 // var LessLoaderGlobalPlugin = require('./plugins/LessLoaderGlobalPlugin');
 // var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
@@ -32,14 +33,25 @@ var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
   var babelOptions = getbabelConfig(config, isDebug);
-  let stylelOptions = {
-    sourceMap: isDebug,
-    extract: !isDebug
-  };
+
+  styleLoaderUtils.updateOption(isDebug);
 
   if (webpackConfig.globalVars) {
-    stylelOptions.globalVars = require("./util/less-utils")(path.resolve(webpackConfig.globalVars), {}, isDebug);
+    styleLoaderUtils.updateGlobalVars(webpackConfig.globalVars);
+    if(isDebug){
+      logger.info(chalk.green("提醒：修改"+webpackConfig.globalVars+"文件后需要重启服务"));
+    }
   }
+
+  if (webpackConfig.globalJsonVars) {
+    styleLoaderUtils.updateGlobalJsonVars(webpackConfig.globalJsonVars);
+    if(isDebug){
+      logger.info(chalk.green("提醒：修改参数 globalJsonVars 后需要重启服务"));
+    }
+  }
+
+  const extractCSSPlugin = new ExtractTextPlugin(`${config.cssPath}/[name]${config.hashString}.css`);
+  const extractVueCSSPlugin = new ExtractTextPlugin(`${config.cssPath}/[name]-vue${config.hashString}.css`);
 
   var genWebpackConfig = {
     entry: {},
@@ -54,7 +66,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         test: /\.(ico|jpg|png|gif|svg)(\?.*)?$/,
         loader: "url-loader",
         query: {
-          limit: 10000,
+          limit: webpackConfig.dataUrlLimit || 100,
           name: `${config.staticPath}images/[path][name]${config.hashString}.[ext]`
         }
       }, {
@@ -67,7 +79,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          loaders: webpackUtils.cssLoaders(Object.assign({ from: 'vue' }, stylelOptions))
+          loaders: styleLoaderUtils.cssLoaders({ from: 'vue', extractPlugin: extractVueCSSPlugin })
         }
       }, {
         test: /\.html?$/,
@@ -151,10 +163,10 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     }
   }
 
-  let stylels = webpackUtils.styleLoaders(stylelOptions);
+  let styles = styleLoaderUtils.styleLoaders({extractPlugin: extractCSSPlugin});
 
-  for (var i = 0; i < stylels.length; i++) {
-    genWebpackConfig.module.rules.push(stylels[i]);
+  for (var i = 0; i < styles.length; i++) {
+    genWebpackConfig.module.rules.push(styles[i]);
   }
 
   if (!isDebug) {
@@ -172,6 +184,8 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
           safe: true
         }
       }),
+      extractCSSPlugin,
+      extractVueCSSPlugin,
       new ExtractTextPlugin({
         filename: `${config.cssPath}/[name]${config.hashString}.css`,
         allChunks: true
