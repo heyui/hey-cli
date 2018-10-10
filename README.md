@@ -227,3 +227,18 @@ The current template
 - iViewUI: iViewUI project
 
 For specific projects, please refer to [hey-cli-template](https://github.com/heyui/hey-cli-template)。
+
+## Analyze
+
+You can use webpack plugin generate analyze.
+
+<img src="https://github.com/heyui/hey-cli/blob/master/analyze.jpg?raw=true" width="400"/>
+
+``` sh
+npm install -g webpack-bundle-analyzer
+
+// project folder
+hey build
+webpack-bundle-analyzer dist/stat.json
+
+```
