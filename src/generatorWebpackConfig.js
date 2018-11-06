@@ -200,7 +200,12 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
   if(webpackConfig.alias){
     for(var key in webpackConfig.alias){
-      genWebpackConfig.resolve.alias[key] = path.join(process.cwd(), webpackConfig.alias[key]);
+      let value = webpackConfig.alias[key];
+      if(value.indexOf('.') == 0 || value.indexOf('/') == 0) {
+        genWebpackConfig.resolve.alias[key] = path.join(process.cwd(), value);
+      } else {
+        genWebpackConfig.resolve.alias[key] = value;
+      }
     }
   }
   
