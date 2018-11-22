@@ -170,15 +170,19 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
   }
 
   if (!isDebug) {
+    if(webpackConfig.compress !== false) {
+      genWebpackConfig.plugins.push(
+        new UglifyJsPlugin({
+          compress:  {
+            warnings: false,
+            drop_debugger: true,
+            drop_console: !webpackConfig.console
+          },
+          sourceMap: false
+        })
+      );
+    }
     genWebpackConfig.plugins.push(
-      new UglifyJsPlugin({
-        compress: {
-          warnings: false,
-          drop_debugger: true,
-          drop_console: !webpackConfig.console
-        },
-        sourceMap: false
-      }),
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
           safe: true

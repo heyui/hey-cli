@@ -79,6 +79,7 @@ function getConfig(args, isDebug) {
 
   conf.root = conf.dist = conf.dist || conf.root;
   conf.webpack.root = conf.dist || conf.root;
+  conf.webpack.compress = conf.webpack.compress === false ? false : true;
 
   var timestamp = (!isDebug && conf.timestamp) ? (new Date().getTime()) : "";
   conf.staticPath = "static" + timestamp + "/";

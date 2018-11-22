@@ -38,6 +38,7 @@ module.exports = {
   "webpack": { //webpack related configuration
     "console": false, //package compression whether to retain the console, the default is false
     "publicPath": "/", //public path
+    "compress": true / false, // default value depends on build or dev, or you can set compress js when build.
     "output": {
       // Output what documents, mainly html,
       // Default setting will load the same js file as the html file name for the entrance. 
