@@ -30,6 +30,7 @@ module.exports = {
   "port": 9002,
   "dist": 'dist', //生成文件的根目录
   "timestamp": false, //build生成的static文件夹是否添加时间戳
+  "clean": true, //打包之前清空dist目录
   "react": true, //支持react项目
 	//webpack相关配置    
   "webpack": {
