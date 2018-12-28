@@ -1,38 +1,19 @@
 var paths = require('./util/path.js');
 var Utils = require('./util/utils.js');
 var styleLoaderUtils = require('./util/style-loader-utils.js');
-var os = require('os');
-var path = require('path'),
-  fs = require('fs'),
-  logger = require('./logger'),
-  webpack = require('webpack'),
-  glob = require('glob'),
-  ExtractTextPlugin = require('extract-text-webpack-plugin');
-var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-getbabelConfig = require('./babel');
+var path = require('path');
+var logger = require('./logger');
+var webpack = require('webpack');
+var glob = require('glob');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+var getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HtmlWebpackCDNPlugin = require('./plugins/HtmlWebpackCDNPlugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var chalk = require('chalk');
-// var UglifyJsParallelPlugin = require('webpack-uglify-parallel');
-// var LessLoaderGlobalPlugin = require('./plugins/LessLoaderGlobalPlugin');
-// var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
-// var ManifestPlugin = require('webpack-manifest-plugin');
-
-/**
- * only given props will be used
- *     entry
- *     output
- *     module: loaders: will be merged with project plugins
- *     resolve
- *     resolveLoader
- *     plugins: will be merged with project plugins
- *     externals
- *     postcss
- */
 
 const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
-  var babelOptions = getbabelConfig(config, isDebug);
 
   styleLoaderUtils.updateOption(isDebug);
 
@@ -102,7 +83,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         exclude: /(node_modules|bower_components|\.exec\.js$)/,
         use: [{
           loader: 'babel-loader',
-          options: babelOptions
+          options: getbabelConfig(config)
         }]
       }]
     },
@@ -138,7 +119,6 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
           minimize: !isDebug,
           debug: isDebug,
           context: process.cwd(),
-          babel: babelOptions,
           postcss: [
             require('autoprefixer')
           ]
@@ -376,17 +356,6 @@ module.exports = function (config, isDebug) {
 
   if (isDebug) {
     genWebpack.plugins.push(new webpack.HotModuleReplacementPlugin());
-    // var IPv4 = "localhost";
-    // if (os && os.networkInterfaces() && os.networkInterfaces().en0) {
-    //   for (var i = 0; i < os.networkInterfaces().en0.length; i++) {
-    //     if (os.networkInterfaces().en0[i].family == 'IPv4') {
-    //       IPv4 = os.networkInterfaces().en0[i].address;
-    //     }
-    //   }
-    // }
-    // genWebpack.output.publicPath = `http://${IPv4}:${webpackConfig.port}/`;
   }
-  // logger.info(genWebpack);
-  // logger.info(genWebpack.module.rules);
   return genWebpack;
 }
