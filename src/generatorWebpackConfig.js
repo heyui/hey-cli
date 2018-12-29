@@ -70,9 +70,6 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
             interpolate: true,
         },
       }, {
-        test: /\.exec\.js$/,
-        use: [ 'script-loader' ]
-      }, {
         test: /\.tpl?$/,
         loader: 'ejs-loader'
       }, {
@@ -80,7 +77,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         loader: 'json-loader',
       }, {
         test: /\.(jsx|js)?$/,
-        exclude: /(node_modules|bower_components|\.exec\.js$)/,
+        exclude: /(node_modules|bower_components)/,
         use: [{
           loader: 'babel-loader',
           options: getbabelConfig(config)
