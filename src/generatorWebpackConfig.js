@@ -119,6 +119,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
           minimize: !isDebug,
           debug: isDebug,
           context: process.cwd(),
+          babel: getbabelConfig(config),
           postcss: [
             require('autoprefixer')
           ]
