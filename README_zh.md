@@ -210,8 +210,6 @@ const debug = process.env.NODE_ENV == 'development'; //production
 
 ```sh
 hey init <project-name>
-hey init <project-name> <github-url>
-# hey init test heyui/hey-cli-template
 ```
 
 现有模板

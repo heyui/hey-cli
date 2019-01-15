@@ -215,8 +215,7 @@ Generate project using template.
 
 ```sh
 hey init <project-name>
-hey init <project-name> <github-url>
-# hey init test heyui/hey-cli-template
+# hey init test
 ```
 
 The current template
