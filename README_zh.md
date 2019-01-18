@@ -62,8 +62,9 @@ module.exports = {
     },
 
     //定义resolve，https://webpack.js.org/configuration/resolve/
-    "resolve": {
-      "alias": {}
+    "alias": {
+      components: './src/components/',
+      // 你可以使用 import index from 'components/index'  => src/components/index
     },
 
     //定义全局变量, https://webpack.js.org/plugins/provide-plugin

@@ -66,8 +66,9 @@ module.exports = {
     },
 
     //define resolve, https://webpack.js.org/configuration/resolve/
-    "resolve": {
-      "alias": {}
+    "alias": {
+      components: './src/components/',
+      // You can use import index from 'components/index'  => src/components/index
     },
 
     //define global, https://webpack.js.org/plugins/provide-plugin
