@@ -1,19 +1,17 @@
 var less = require("less");
-var fs=require("fs");
-var path=require("path");
-var paths=require("./path");
-var logger = require('../logger');
+var fs = require("fs");
+var path = require("path");
 
 
-module.exports = function (source,query) {
+module.exports = function (source, query) {
   query = query || {};
   var camelCase = query.camelCase || false;
   var lessVars = {};
-  
+
   var paletteLess = fs.readFileSync(source, 'utf8');
-  paletteLess = paletteLess.replace(/\@import \(less\) \"\~/, ("@import (less) \""+ path.join(process.cwd(), 'node_modules') + "/"));
+  paletteLess = paletteLess.replace(/\@import \(less\) \"\~/, ("@import (less) \"" + path.join(process.cwd(), 'node_modules') + "/"));
   less.parse(paletteLess, {
-    paths:[path.dirname(source)]
+    paths: [path.dirname(source)]
   }, function (err, root, imports, options) {
     try {
       var evalEnv = new less.contexts.Eval(options);
@@ -32,12 +30,9 @@ module.exports = function (source,query) {
           lessVars[name] = value.toCSS();
         }
       });
-      // logger.info("全局定义的less参数:", Object.keys(lessVars).join(','));
-      // console.log(lessVars);
     } catch (err) {
       console.error(err)
     }
-    
   });
   return lessVars;
 };
