@@ -234,8 +234,6 @@ For specific projects, please refer to [hey-cli-template](https://github.com/hey
 
 You can use webpack plugin generate analyze.
 
-<img src="https://github.com/heyui/hey-cli/blob/master/analyze.jpg?raw=true" width="400"/>
-
 ``` sh
 npm install -g webpack-bundle-analyzer
 

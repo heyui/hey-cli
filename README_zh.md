@@ -228,8 +228,6 @@ hey init <project-name>
 
 你可以使用webpack工具生成分析结果.
 
-<img src="https://github.com/heyui/hey-cli/blob/master/analyze.jpg?raw=true" width="400"/>
-
 ``` sh
 npm install -g webpack-bundle-analyzer
 
