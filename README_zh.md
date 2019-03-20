@@ -71,7 +71,9 @@ module.exports = {
     "global": {
       "Vue": "vue",
       "$": "jquery",
-      "log": "./js/common/log"
+      "log": "./js/common/log",
+      // use export default
+      Utils: [path.resolve(__dirname, 'src/js/common/utils'), 'default'],
     },
 
     //定义反向代理服务器，https://webpack.js.org/configuration/dev-server/#devserver-proxy
