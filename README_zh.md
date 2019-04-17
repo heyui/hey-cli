@@ -32,11 +32,12 @@ module.exports = {
   "timestamp": false, //build生成的static文件夹是否添加时间戳
   "clean": true, //打包之前清空dist目录
   "react": true, //支持react项目
+  "openBrowser": true, // 自动打开浏览器
 	//webpack相关配置    
   "webpack": {
     "console": false, //打包压缩是否保留console，默认为false
     "sourceMap" : false, //打包的时候要不要保留sourceMap, 默认为false
-    "compress": true / false, // 取决于是开发还是打包，设置值会影响打包的时候是否压缩js代码
+    "compress": true / false, // 默认值取决于是开发还是打包，设置值会影响打包的时候是否压缩js代码
     //公开path
     "publicPath": "/", 
 

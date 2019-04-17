@@ -87,15 +87,11 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     resolve: {
       extensions: ['.js', '.vue', '.jsx', '.json'],
       alias: {
-        // 'vue$': 'vue/dist/vue.runtime.esm.js',
         '@': path.join(process.cwd(), 'src'),
       },
       modules: [
-        // project node modules
         path.join(process.cwd(), 'node_modules'),
-        // hey node modules
         path.join(__dirname, "..", 'node_modules'),
-        // all global node modules
         path.join(paths.join(path.sep), 'node_modules')
       ],
     },
@@ -198,21 +194,18 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
       genWebpackConfig[c] = webpackConfig[c];
     }
   }
-  // console.log(genWebpackConfig)
 
   return genWebpackConfig;
 };
 
 function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
   let comObj = {}
-    // check relationship between chunk and common
   if (webpackConfig.commonTrunk) {
     for (let key in webpackConfig.commonTrunk) {
       comObj[key] = [];
     }
   }
 
-  // add output
   if (webpackConfig.output) {
     for (let key in webpackConfig.output) {
       let files = glob.sync(key);
@@ -276,7 +269,6 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
         filename: `${config.jsPath}common/${key}${config.hashString}.js`,
         chunks: comObj[key],
         minChunks: function (module) {
-          // this assumes your vendor imports exist in the node_modules directory
           return module.context && module.context.indexOf('node_modules') !== -1;
         }
       }))

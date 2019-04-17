@@ -17,13 +17,14 @@ module.exports = {
    * @return {[type]} [description]
    */
   dev: function (args) {
-    var config = generatorConfig('dev', args);
-    if(config === false) return;
+    var result = generatorConfig('dev', args);
+    if(result === false) return;
 
-    var webpack_config = config.webpack;
+    var webpackConfig = result.webpack;
+    var config = result.config;
 
     try {
-      var compiler = webpack(webpack_config);
+      var compiler = webpack(webpackConfig);
     } catch (e) {
       logger.error(e);
     }
@@ -43,7 +44,7 @@ module.exports = {
         "Access-Control-Allow-Methods": "PUT,POST,GET,DELETE,OPTIONS",
       },
     }
-    var devServer = config.config.webpack.devServer;
+    var devServer = config.webpack.devServer;
     if (devServer) {
       for (var key in devServer) {
         if (key == 'proxy') {
@@ -66,29 +67,21 @@ module.exports = {
     logger.debug('webpack dev server start with config: ');
     serverCfg.disableHostCheck = true;
     serverCfg.compress = true;
-    // serverCfg.before = function(app){
-    //   app.use(function(req, res, next) {
-    //     res.header("Access-Control-Allow-Origin", "*");
-    //     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-    //     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-    //     next();
-    //   });
-    // }
     var isOpened = false;
     compiler.apply(new ProgressPlugin(function(percentage, msg, msg2, msg3, msg4) {
-      if(percentage == 1 && !isOpened) {
-        open("http://localhost:"+config.config.port);
+      if(percentage == 1 && !isOpened && config.openBrowser) {
+        open("http://localhost:"+config.port);
         isOpened = true;
       }
     }));
-    new WebpackDevServer(compiler, serverCfg).listen(config.config.port, '::', (err) => {
+    new WebpackDevServer(compiler, serverCfg).listen(config.port, '::', (err) => {
       if (err) {
         logger.error(err);
         process.exit(1);
       }
 
       logger.info('----------------------------------');
-      logger.info('Starting server on ' + chalk.bold.red("http://localhost:"+config.config.port));
+      logger.info('Starting server on ' + chalk.bold.red("http://localhost:"+config.port));
       logger.info('----------------------------------');
     });
   },
@@ -97,22 +90,24 @@ module.exports = {
    * @return {[type]} [description]
    */
   build: function (args, after) {
-    var config = generatorConfig('release', args);
+    var result = generatorConfig('release', args);
+    var config = result.config;
+    var webpackConfig = result.webpack;
     if(config === false) return;
     var webpackPack = this.webpackPack;
-    if (args.clean || config.config.clean) {
-      logger.info('start remove ' + config.config.root + ' folder. ');
-      rimraf(config.config.root, () => {
-        logger.info('build cleaned, removed ' + config.config.root + ' folder. ');
-        webpackPack(config, args);
+    if (args.clean || config.clean) {
+      logger.info('start remove ' + config.root + ' folder. ');
+      rimraf(config.root, () => {
+        logger.info('build cleaned, removed ' + config.root + ' folder. ');
+        webpackPack(config, webpackConfig, args);
       })
     } else {
-      webpackPack(config, args);
+      webpackPack(config, webpackConfig, args);
     }
   },
-  webpackPack(config, args) {
+  webpackPack(config, webpackConfig, args) {
     logger.info('start build project... ');
-    var compiler = webpack(config.webpack);
+    var compiler = webpack(webpackConfig);
 
     var ProgressBar = require('progress');
     var bar = new ProgressBar('  building [:bar] :percent :etas', { 
@@ -141,7 +136,7 @@ module.exports = {
         logger.warn(jsonStats.warnings);
       }
       // if (args.profile) {
-        fss.writeFile(config.webpack.output.path + '/stat.json', JSON.stringify(jsonStats),  function(err) {
+        fss.writeFile(webpackConfig.output.path + '/stat.json', JSON.stringify(jsonStats),  function(err) {
           if (err) {
               return console.error(err);
           }
@@ -150,22 +145,18 @@ module.exports = {
       // }
 
       logger.info('build complete. ');
-      var conf = config.config;
-      if (conf.copy && conf.copy.length > 0) {
+      if (config.copy && config.copy.length > 0) {
         logger.info('start copying. ');
-        conf.copy.forEach((key) => {
+        config.copy.forEach((key) => {
           let files = glob.sync(key);
           files.forEach((file) => {
-            fs.copySync(file, `${conf.root}/${file}`);
+            fs.copySync(file, `${config.root}/${file}`);
           })
           logger.info('copy complete. ');
         })
       }
       logger.info('build successfully. ');
 
-      // if (after && typeof after === "function") {
-      //   after();
-      // }
     });
   }
 }

@@ -7,6 +7,7 @@ module.exports = {
   "root": "dist",
   "console": false,
   "clean": true,
+  "openBrowser": true,
   "webpack": {
     sourceMap: false,
     "publicPath": '/',
