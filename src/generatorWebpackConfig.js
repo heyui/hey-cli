@@ -249,7 +249,6 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
             minify: {
               removeComments: true,
               collapseWhitespace: true,
-              removeAttributeQuotes: true
             },
             chunksSortMode: 'auto'
           })
