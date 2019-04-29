@@ -1,4 +1,5 @@
 var path = require('path');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 var o = {
   globalVars: {},
@@ -57,10 +58,11 @@ exports.cssLoaders = function (options) {
     // Extract CSS when that option is specified
     // (which is the case during production build)
     if (o.extract) {
-      return options.extractPlugin.extract({
-        use: loaders,
-        fallback: styleLoader
-      })
+      return [MiniCssExtractPlugin.loader, ...loaders]
+      // options.extractPlugin.extract({
+      //   use: loaders,
+      //   fallback: styleLoader
+      // })
     } else {
       return [styleLoader].concat(loaders)
     }

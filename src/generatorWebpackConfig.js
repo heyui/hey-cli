@@ -133,16 +133,18 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
   if (!isDebug) {
     if(webpackConfig.compress !== false) {
-      genWebpackConfig.plugins.push(
+      webpackConfig.optimization.minimizer = [
         new UglifyJsPlugin({
-          compress:  {
-            warnings: false,
-            drop_debugger: true,
-            drop_console: !webpackConfig.console
+          uglifyOptions: {
+            compress:  {
+              warnings: false,
+              drop_debugger: true,
+              drop_console: !webpackConfig.console
+            }
           },
           sourceMap: false
         })
-      );
+      ]
     }
     genWebpackConfig.plugins.push(
       new OptimizeCSSPlugin({
@@ -295,8 +297,9 @@ function initUmdOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
       libraryTarget: 'umd'
     };
     if (resObj.libraryExport) {
-      obj.libraryExport = resObj.libraryExport;
+      
     }
+    obj.libraryExport = resObj.libraryExport || 'default';
     genWebpack.output = obj;
   }
   return genWebpack;
