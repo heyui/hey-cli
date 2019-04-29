@@ -183,7 +183,8 @@ module.exports = {
     umd: {
       entry: "./src/index.js",
       library: "Validator",
-      filename: 'validator.js' //build后将生成/build/validator.js
+      filename: 'validator.js', //build后将生成/build/validator.js
+      libraryExport: 'default'
     },
     externals: {
       "manba": "manba"  //该依赖包将不会打包进源码中

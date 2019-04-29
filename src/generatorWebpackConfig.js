@@ -5,13 +5,13 @@ var path = require('path');
 var logger = require('./logger');
 var webpack = require('webpack');
 var glob = require('glob');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 var getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var HtmlWebpackCDNPlugin = require('./plugins/HtmlWebpackCDNPlugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var chalk = require('chalk');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
@@ -31,8 +31,8 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     }
   }
 
-  const extractCSSPlugin = new ExtractTextPlugin(`${config.cssPath}/[name]${config.hashString}.css`);
-  const extractVueCSSPlugin = new ExtractTextPlugin(`${config.cssPath}/[name]-vue${config.hashString}.css`);
+  const extractCSSPlugin = new MiniCssExtractPlugin(`${config.cssPath}/[name]${config.hashString}.css`);
+  const extractVueCSSPlugin = new MiniCssExtractPlugin(`${config.cssPath}/[name]-vue${config.hashString}.css`);
 
   var genWebpackConfig = {
     entry: {},
@@ -97,27 +97,15 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     },
     resolveLoader: {
       modules: [
-        // project node modules
         path.join(process.cwd(), 'node_modules'),
-        // hey node modules
         path.join(__dirname, "..", 'node_modules'),
-        // all global node modules
         path.join(paths.join(path.sep), 'node_modules')
       ]
     },
+    mode: isDebug ? 'development' : 'production',
     devtool: (isDebug ? '#eval' : (webpackConfig.sourceMap ? 'source-map' : false)),
     plugins: [
-      new webpack.LoaderOptionsPlugin({
-        options: {
-          minimize: !isDebug,
-          debug: isDebug,
-          context: process.cwd(),
-          babel: getbabelConfig(config),
-          postcss: [
-            require('autoprefixer')
-          ]
-        }
-      }),
+      new VueLoaderPlugin(),
       new webpack.DefinePlugin({
         WEBPACK_DEBUG: isDebug,
         'process.env': {
@@ -164,16 +152,12 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
       }),
       extractCSSPlugin,
       extractVueCSSPlugin,
-      new ExtractTextPlugin({
+      new MiniCssExtractPlugin({
         filename: `${config.cssPath}/[name]${config.hashString}.css`,
         allChunks: true
       }),
       new webpack.optimize.OccurrenceOrderPlugin()
     );
-
-    if(webpackConfig.htmlPublicPath){
-      genWebpackConfig.plugins.push(new HtmlWebpackCDNPlugin())
-    }
   }
 
   if(webpackConfig.alias){
@@ -245,7 +229,6 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
         if (!isDebug) {
           Utils.extend(plugin_obj, {
             inject: true,
-            prefix: webpackConfig.htmlPublicPath,
             minify: {
               removeComments: true,
               collapseWhitespace: true,
@@ -263,14 +246,14 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
   if (webpackConfig.commonTrunk) {
     for (let key in webpackConfig.commonTrunk) {
       genWebpack.entry[key] = webpackConfig.commonTrunk[key];
-      genWebpack.plugins.push(new webpack.optimize.CommonsChunkPlugin({
+      webpackConfig.optimization.splitChunks = {
         name: key,
-        filename: `${config.jsPath}common/${key}${config.hashString}.js`,
+        // filename: `${config.jsPath}common/${key}${config.hashString}.js`,
         chunks: comObj[key],
         minChunks: function (module) {
           return module.context && module.context.indexOf('node_modules') !== -1;
         }
-      }))
+      }
     }
   }
 
@@ -305,12 +288,16 @@ function initUmdOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
     } else {
       genWebpack.entry = path.resolve(entrys);
     }
-    genWebpack.output = {
+    let obj = {
       path: `${process.cwd()}/${config.root}`,
       filename: resObj.filename,
       library: resObj.library,
       libraryTarget: 'umd'
     };
+    if (resObj.libraryExport) {
+      obj.libraryExport = resObj.libraryExport;
+    }
+    genWebpack.output = obj;
   }
   return genWebpack;
 }

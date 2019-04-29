@@ -24,14 +24,16 @@ exports.cssLoaders = function (options) {
   var cssLoader = {
     loader: 'css-loader',
     options: {
-      minimize: o.minimize,
       sourceMap: o.sourceMap
     }
   }
   var postcssLoader = {
     loader: 'postcss-loader',
     options: {
-      sourceMap: o.sourceMap
+      sourceMap: o.sourceMap,
+      plugins: [
+        require('autoprefixer')()
+      ]
     }
   }
 

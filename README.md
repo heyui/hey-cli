@@ -186,7 +186,8 @@ module.exports = {
     umd: {
       entry: "./src/index.js",
       library: "Validator",
-      filename: 'validator.js' //build generation /build/validator.js
+      filename: 'validator.js', //build generation /build/validator.js
+      libraryExport: 'default'
     },
     externals: {
       "manba": "manba"  //The dependent package will not be packaged into the source code
