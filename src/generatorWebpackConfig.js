@@ -102,7 +102,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         path.join(paths.join(path.sep), 'node_modules')
       ]
     },
-    mode: isDebug ? 'development' : 'production',
+    mode: webpackConfig.mode,
     devtool: (isDebug ? '#eval' : (webpackConfig.sourceMap ? 'source-map' : false)),
     plugins: [
       new VueLoaderPlugin(),
@@ -132,20 +132,23 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
   }
 
   if (!isDebug) {
-    if(webpackConfig.compress !== false) {
-      webpackConfig.optimization.minimizer = [
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            compress:  {
-              warnings: false,
-              drop_debugger: true,
-              drop_console: !webpackConfig.console
-            }
-          },
-          sourceMap: false
-        })
-      ]
-    }
+    // webpackConfig.optimization.minimize = false;
+    webpackConfig.optimization.minimizer = [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          cache: true,
+          parallel: true,
+          exclude: webpackConfig.compress !== false ? ".js" : null,
+          compress:  {
+            warnings: false,
+            drop_debugger: true,
+            drop_console: !webpackConfig.console
+          }
+        },
+        sourceMap: false
+      })
+    ]
+
     genWebpackConfig.plugins.push(
       new OptimizeCSSPlugin({
         cssProcessorOptions: {

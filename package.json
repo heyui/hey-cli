@@ -1,6 +1,6 @@
 {
   "name": "hey-cli",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "webpack脚手架，hot-dev-server，build",
   "keywords": [
     "webpack",
@@ -36,6 +36,7 @@
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.4.4",
+    "ajv": "^6.10.0",
     "autoprefixer": "^9.5.1",
     "babel-loader": "^8.0.5",
     "bin-build": "^3.0.0",
@@ -63,6 +64,7 @@
     "less-loader": "^4.1.0",
     "log4js": "^4.1.0",
     "metalsmith": "^2.3.0",
+    "mini-css-extract-plugin": "^0.6.0",
     "node-less": "^1.0.0",
     "open": "^6.2.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
@@ -94,7 +96,5 @@
     "ie >= 9",
     "> 1%"
   ],
-  "devDependencies": {
-    "mini-css-extract-plugin": "^0.6.0"
-  }
+  "devDependencies": {}
 }

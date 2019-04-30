@@ -4,7 +4,7 @@ var logger = require('./logger');
 var path = require('path');
 var generatorWebpackConfig = require('./generatorWebpackConfig');
 
-function getConfig(args, isDebug) {
+function getConfig(args, isDebug, type) {
   var conf = null;
 
   var json = {};
@@ -80,6 +80,7 @@ function getConfig(args, isDebug) {
   conf.root = conf.dist = conf.dist || conf.root;
   conf.webpack.root = conf.dist || conf.root;
   conf.webpack.compress = conf.webpack.compress === false ? false : true;
+  conf.webpack.mode = conf.webpack.mode || type;
 
   var timestamp = (!isDebug && conf.timestamp) ? (new Date().getTime()) : "";
   conf.staticPath = "static" + timestamp + "/";
@@ -91,8 +92,8 @@ function getConfig(args, isDebug) {
 }
 
 module.exports = function (type, args) {
-  var isDebug = type == 'dev';
-  var config = getConfig(args, isDebug);
+  var isDebug = type == 'development';
+  var config = getConfig(args, isDebug, type);
   if(config === false){
     return false;
   }

@@ -17,7 +17,7 @@ module.exports = {
    * @return {[type]} [description]
    */
   dev: function (args) {
-    var result = generatorConfig('dev', args);
+    var result = generatorConfig('development', args);
     if(result === false) return;
 
     var webpackConfig = result.webpack;
@@ -90,7 +90,7 @@ module.exports = {
    * @return {[type]} [description]
    */
   build: function (args, after) {
-    var result = generatorConfig('release', args);
+    var result = generatorConfig('production', args);
     var config = result.config;
     var webpackConfig = result.webpack;
     if(config === false) return;
