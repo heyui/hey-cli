@@ -93,7 +93,7 @@ module.exports = {
     var result = generatorConfig('production', args);
     var config = result.config;
     var webpackConfig = result.webpack;
-    if(config === false) return;
+    if(config == null || config === false) return;
     var webpackPack = this.webpackPack;
     if (args.clean || config.clean) {
       logger.info('start remove ' + config.root + ' folder. ');

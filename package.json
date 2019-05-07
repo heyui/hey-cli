@@ -39,6 +39,7 @@
     "ajv": "^6.10.0",
     "autoprefixer": "^9.5.1",
     "babel-loader": "^8.0.5",
+    "babel-plugin-import": "^1.11.0",
     "bin-build": "^3.0.0",
     "colorful": "^2.1.0",
     "commander": "^2.20.0",

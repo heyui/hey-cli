@@ -4,8 +4,13 @@ module.exports = (conf) => {
   babelConfig.plugins = [
     require.resolve('@babel/plugin-syntax-dynamic-import'), require.resolve('@babel/plugin-transform-runtime')
   ];
-  if(conf.react){
+
+  if (conf.react) {
     babelConfig.presets.push([require.resolve('@babel/preset-react')]);
+  }
+
+  if (conf.webpack.import) {
+    babelConfig.plugins.push([require.resolve('babel-plugin-import'), conf.webpack.import]);
   }
 
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-async-to-generator')]);

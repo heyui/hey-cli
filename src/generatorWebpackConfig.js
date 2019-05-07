@@ -73,9 +73,6 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         test: /\.tpl?$/,
         loader: 'ejs-loader'
       }, {
-        test: /\.json$/,
-        loader: 'json-loader',
-      }, {
         test: /\.(jsx|js)?$/,
         exclude: /(node_modules|bower_components)/,
         use: [{
@@ -105,13 +102,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     mode: webpackConfig.mode,
     devtool: (isDebug ? '#eval' : (webpackConfig.sourceMap ? 'source-map' : false)),
     plugins: [
-      new VueLoaderPlugin(),
-      new webpack.DefinePlugin({
-        WEBPACK_DEBUG: isDebug,
-        'process.env': {
-          NODE_ENV: (isDebug ? '"development"' : '"production"')
-        }
-      }),
+      new VueLoaderPlugin()
     ],
   };
 
@@ -297,11 +288,9 @@ function initUmdOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
       path: `${process.cwd()}/${config.root}`,
       filename: resObj.filename,
       library: resObj.library,
-      libraryTarget: 'umd'
+      libraryTarget: 'umd',
+      umdNamedDefine: true
     };
-    if (resObj.libraryExport) {
-      
-    }
     obj.libraryExport = resObj.libraryExport || 'default';
     genWebpack.output = obj;
   }
