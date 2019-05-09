@@ -42,6 +42,10 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
       chunkFilename: `${config.jsPath}[name]${config.hashString}.js`,
       publicPath: isDebug ? '/':webpackConfig.publicPath
     },
+    optimization: {
+      usedExports: true,
+      providedExports: true
+    },
     module: {
       rules: [{
         test: /\.(ico|jpg|png|gif|svg)(\?.*)?$/,
@@ -123,22 +127,22 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
   }
 
   if (!isDebug) {
-    // webpackConfig.optimization.minimize = false;
-    webpackConfig.optimization.minimizer = [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          cache: true,
-          parallel: true,
-          exclude: webpackConfig.compress !== false ? ".js" : null,
-          compress:  {
-            warnings: false,
-            drop_debugger: true,
-            drop_console: !webpackConfig.console
-          }
-        },
-        sourceMap: false
-      })
-    ]
+    genWebpackConfig.optimization.minimize = webpackConfig.compress;
+    // webpackConfig.optimization.minimizer = [
+    //   new UglifyJsPlugin({
+    //     uglifyOptions: {
+    //       cache: true,
+    //       parallel: true,
+    //       exclude: webpackConfig.compress !== false ? ".js" : null,
+    //       compress:  {
+    //         warnings: false,
+    //         drop_debugger: true,
+    //         drop_console: !webpackConfig.console
+    //       }
+    //     },
+    //     sourceMap: false
+    //   })
+    // ]
 
     genWebpackConfig.plugins.push(
       new OptimizeCSSPlugin({
@@ -242,9 +246,8 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
   if (webpackConfig.commonTrunk) {
     for (let key in webpackConfig.commonTrunk) {
       genWebpack.entry[key] = webpackConfig.commonTrunk[key];
-      webpackConfig.optimization.splitChunks = {
+      genWebpack.optimization.splitChunks = {
         name: key,
-        // filename: `${config.jsPath}common/${key}${config.hashString}.js`,
         chunks: comObj[key],
         minChunks: function (module) {
           return module.context && module.context.indexOf('node_modules') !== -1;
@@ -288,9 +291,11 @@ function initUmdOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
       path: `${process.cwd()}/${config.root}`,
       filename: resObj.filename,
       library: resObj.library,
-      libraryTarget: 'umd',
-      umdNamedDefine: true
+      libraryTarget: resObj.libraryTarget || 'umd',
     };
+    if (obj.libraryTarget == 'umd') {
+      obj.umdNamedDefine = true;
+    }
     obj.libraryExport = resObj.libraryExport || 'default';
     genWebpack.output = obj;
   }

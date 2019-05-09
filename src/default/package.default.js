@@ -15,11 +15,7 @@ module.exports = {
     commonTrunk: {},
     global: {},
     devServer: {},
-    externals: [],
-    optimization: {
-      usedExports: true,
-      providedExports: true
-    }
+    externals: []
   },
   copy: []
 }
