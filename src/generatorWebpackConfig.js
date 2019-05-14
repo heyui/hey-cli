@@ -246,13 +246,10 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
   if (webpackConfig.commonTrunk) {
     for (let key in webpackConfig.commonTrunk) {
       genWebpack.entry[key] = webpackConfig.commonTrunk[key];
-      genWebpack.optimization.splitChunks = {
-        name: key,
-        chunks: comObj[key],
-        minChunks: function (module) {
-          return module.context && module.context.indexOf('node_modules') !== -1;
-        }
-      }
+      // genWebpack.optimization.splitChunks = {
+      //   name: true,
+      //   chunks: 'all'
+      // }
     }
   }
 

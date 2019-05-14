@@ -9,8 +9,8 @@ module.exports = (conf) => {
     babelConfig.presets.push([require.resolve('@babel/preset-react')]);
   }
 
-  if (conf.webpack.import) {
-    babelConfig.plugins.push([require.resolve('babel-plugin-import'), conf.webpack.import]);
+  if (conf.webpack.pluginImport) {
+    babelConfig.plugins.push([require.resolve('babel-plugin-import'), conf.webpack.pluginImport]);
   }
 
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-async-to-generator')]);
