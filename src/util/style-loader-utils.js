@@ -55,14 +55,8 @@ exports.cssLoaders = function (options) {
       styleLoader = 'vue-style-loader';
     }
 
-    // Extract CSS when that option is specified
-    // (which is the case during production build)
     if (o.extract) {
       return [MiniCssExtractPlugin.loader, ...loaders]
-      // options.extractPlugin.extract({
-      //   use: loaders,
-      //   fallback: styleLoader
-      // })
     } else {
       return [styleLoader].concat(loaders)
     }

@@ -31,8 +31,6 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     }
   }
 
-  const extractCSSPlugin = new MiniCssExtractPlugin(`${config.cssPath}/[name]${config.hashString}.css`);
-  const extractVueCSSPlugin = new MiniCssExtractPlugin(`${config.cssPath}/[name]-vue${config.hashString}.css`);
 
   var genWebpackConfig = {
     entry: {},
@@ -64,7 +62,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          loaders: styleLoaderUtils.cssLoaders({ from: 'vue', extractPlugin: extractVueCSSPlugin })
+          loaders: styleLoaderUtils.cssLoaders({ from: 'vue'})
         }
       }, {
         test: /\.html?$/,
@@ -120,7 +118,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     }
   }
 
-  let styles = styleLoaderUtils.styleLoaders({extractPlugin: extractCSSPlugin});
+  let styles = styleLoaderUtils.styleLoaders();
 
   for (var i = 0; i < styles.length; i++) {
     genWebpackConfig.module.rules.push(styles[i]);
@@ -128,34 +126,16 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
   if (!isDebug) {
     genWebpackConfig.optimization.minimize = webpackConfig.compress;
-    // webpackConfig.optimization.minimizer = [
-    //   new UglifyJsPlugin({
-    //     uglifyOptions: {
-    //       cache: true,
-    //       parallel: true,
-    //       exclude: webpackConfig.compress !== false ? ".js" : null,
-    //       compress:  {
-    //         warnings: false,
-    //         drop_debugger: true,
-    //         drop_console: !webpackConfig.console
-    //       }
-    //     },
-    //     sourceMap: false
-    //   })
-    // ]
+    // genWebpackConfig.optimization.splitChunks = {
 
+    // }
     genWebpackConfig.plugins.push(
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
           safe: true
         }
       }),
-      extractCSSPlugin,
-      extractVueCSSPlugin,
-      new MiniCssExtractPlugin({
-        filename: `${config.cssPath}/[name]${config.hashString}.css`,
-        allChunks: true
-      }),
+      new MiniCssExtractPlugin(`${config.cssPath}/[name]${config.hashString}.css`),
       new webpack.optimize.OccurrenceOrderPlugin()
     );
   }
@@ -183,10 +163,11 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 };
 
 function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
-  let comObj = {}
+  let entrys = {};
+
   if (webpackConfig.commonTrunk) {
     for (let key in webpackConfig.commonTrunk) {
-      comObj[key] = [];
+      entrys[key] = webpackConfig.commonTrunk[key];
     }
   }
 
@@ -195,30 +176,31 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
       let files = glob.sync(key);
       let resObj = webpackConfig.output[key];
       files.forEach((file) => {
-        let entry = file.replace('.html', '');
+        let entry = null;
+        // 如果有配置entry，使用entry，没有则默认和html命名一致。
         if (resObj && resObj.entry) {
           entry = resObj.entry;
         } else {
-          entry = './' + entry;
+          let filename = file.replace('.html', '');
+          entry = './' + filename;
         }
-        genWebpack.entry[entry] = entry;
+        entrys[entry] = entry;
 
         let depends = [];
         if (resObj && resObj.commons) {
           resObj.commons.map((common) => {
             depends.push(common);
-            comObj[common].push(entry);
           });
           Array.prototype.push.apply(depends, resObj.commons);
         } else {
           if (webpackConfig.commonTrunk) {
             for (let key in webpackConfig.commonTrunk) {
               depends.push(key);
-              comObj[key].push(entry);
             }
           }
         }
         depends.push(entry);
+
         let name = './' + file;
         var plugin_obj = {
           template: name,
@@ -242,16 +224,7 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
     }
   }
 
-  // add common trunk
-  if (webpackConfig.commonTrunk) {
-    for (let key in webpackConfig.commonTrunk) {
-      genWebpack.entry[key] = webpackConfig.commonTrunk[key];
-      // genWebpack.optimization.splitChunks = {
-      //   name: true,
-      //   chunks: 'all'
-      // }
-    }
-  }
+  genWebpackConfig.entry = entrys;
 
   if (webpackConfig.global) {
     var globals = {};
