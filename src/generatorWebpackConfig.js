@@ -9,9 +9,11 @@ var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 var getbabelConfig = require('./babel');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var chalk = require('chalk');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const TerserJSPlugin = require("terser-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
@@ -31,18 +33,21 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     }
   }
 
-
   var genWebpackConfig = {
     entry: {},
     output: {
       path: `${process.cwd()}/${webpackConfig.root}/`,
       filename: `${config.jsPath}[name]${config.hashString}.js`,
-      chunkFilename: `${config.jsPath}[name]${config.hashString}.js`,
+      chunkFilename: `${config.jsPath}[id]${config.hashString}.js`,
       publicPath: isDebug ? '/':webpackConfig.publicPath
     },
     optimization: {
       usedExports: true,
-      providedExports: true
+      providedExports: true,
+      splitChunks: {
+        name: true,
+        chunks: 'all'
+      }
     },
     module: {
       rules: [{
@@ -104,7 +109,8 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     mode: webpackConfig.mode,
     devtool: (isDebug ? '#eval' : (webpackConfig.sourceMap ? 'source-map' : false)),
     plugins: [
-      new VueLoaderPlugin()
+      new VueLoaderPlugin(),
+      new BundleAnalyzerPlugin()
     ],
   };
 
@@ -124,18 +130,24 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     genWebpackConfig.module.rules.push(styles[i]);
   }
 
+  
+
   if (!isDebug) {
     genWebpackConfig.optimization.minimize = webpackConfig.compress;
-    // genWebpackConfig.optimization.splitChunks = {
-
-    // }
+    genWebpackConfig.optimization.minimizer = [
+      new TerserJSPlugin({}),
+      new OptimizeCSSAssetsPlugin({})
+    ];
     genWebpackConfig.plugins.push(
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
           safe: true
         }
       }),
-      new MiniCssExtractPlugin(`${config.cssPath}/[name]${config.hashString}.css`),
+      new MiniCssExtractPlugin({
+        filename: `${config.cssPath}[name]${config.hashString}.css`,
+        chunkFilename: `${config.cssPath}[id]${config.hashString}.css`
+      }),
       new webpack.optimize.OccurrenceOrderPlugin()
     );
   }
@@ -162,23 +174,16 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
   return genWebpackConfig;
 };
 
-function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
+function initOutputHtmlPlugins(genWebpack, webpackConfig, config, isDebug) {
   let entrys = {};
-
-  if (webpackConfig.commonTrunk) {
-    for (let key in webpackConfig.commonTrunk) {
-      entrys[key] = webpackConfig.commonTrunk[key];
-    }
-  }
 
   if (webpackConfig.output) {
     for (let key in webpackConfig.output) {
       let files = glob.sync(key);
-      let resObj = webpackConfig.output[key];
+      let resObj = webpackConfig.output[key] || {};
       files.forEach((file) => {
         let entry = null;
-        // 如果有配置entry，使用entry，没有则默认和html命名一致。
-        if (resObj && resObj.entry) {
+        if (resObj.entry) {
           entry = resObj.entry;
         } else {
           let filename = file.replace('.html', '');
@@ -186,26 +191,12 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
         }
         entrys[entry] = entry;
 
-        let depends = [];
-        if (resObj && resObj.commons) {
-          resObj.commons.map((common) => {
-            depends.push(common);
-          });
-          Array.prototype.push.apply(depends, resObj.commons);
-        } else {
-          if (webpackConfig.commonTrunk) {
-            for (let key in webpackConfig.commonTrunk) {
-              depends.push(key);
-            }
-          }
-        }
-        depends.push(entry);
 
         let name = './' + file;
         var plugin_obj = {
           template: name,
           filename: file,
-          chunks: depends,
+          chunks: [entry],
         };
 
         if (!isDebug) {
@@ -223,8 +214,7 @@ function initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug) {
       })
     }
   }
-
-  genWebpackConfig.entry = entrys;
+  genWebpack.entry = entrys;
 
   if (webpackConfig.global) {
     var globals = {};
@@ -297,7 +287,7 @@ function parseEntry(config, entry, isDebug) {
 module.exports = function (config, isDebug) {
   var webpackConfig = config.webpack || {};
   var genWebpack = initDefaultWebpackConf(webpackConfig, isDebug, config);
-  genWebpack = initCommonOutputPlugins(genWebpack, webpackConfig, config, isDebug);
+  genWebpack = initOutputHtmlPlugins(genWebpack, webpackConfig, config, isDebug);
   genWebpack = initUmdOutputPlugins(genWebpack, webpackConfig, config, isDebug);
   genWebpack.entry = parseEntry(config, genWebpack.entry, isDebug);
 
