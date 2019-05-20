@@ -43,11 +43,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     },
     optimization: {
       usedExports: true,
-      providedExports: true,
-      splitChunks: {
-        name: true,
-        chunks: 'all'
-      }
+      providedExports: true
     },
     module: {
       rules: [{
@@ -110,9 +106,21 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     devtool: (isDebug ? '#eval' : (webpackConfig.sourceMap ? 'source-map' : false)),
     plugins: [
       new VueLoaderPlugin(),
-      new BundleAnalyzerPlugin()
     ],
   };
+
+  if (!webpackConfig.umd) {
+    genWebpackConfig.optimization.splitChunks = {
+      name: true,
+      chunks: 'all'
+    };
+  }
+
+  if(config.report) {
+    genWebpackConfig.plugins.push(new BundleAnalyzerPlugin({
+      analyzerPort: `${config.port+100}`
+    }))
+  }
 
   if(webpackConfig.plugins) {
     genWebpackConfig.plugins = genWebpackConfig.plugins.concat(webpackConfig.plugins);
@@ -135,7 +143,15 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
   if (!isDebug) {
     genWebpackConfig.optimization.minimize = webpackConfig.compress;
     genWebpackConfig.optimization.minimizer = [
-      new TerserJSPlugin({}),
+      new TerserJSPlugin({
+        parallel: true,
+        extractComments: !!webpackConfig.extractComments,
+        terserOptions: {
+          output: {
+            comments: false,
+          },
+        },
+      }),
       new OptimizeCSSAssetsPlugin({})
     ];
     genWebpackConfig.plugins.push(

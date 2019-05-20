@@ -9,6 +9,7 @@ var logger = require('../src/logger');
 program
     .usage('[options]')
     .option('-p, --port', 'specify the port when dev server run')
+    .option('-r, --report', 'Visualize size of webpack output files with an interactive zoomable treemap.')
     .on('-h', printHelp)
     .on('--help', printHelp)
     .parse(process.argv);
@@ -21,7 +22,8 @@ function printHelp() {
 }
 
 var args = {
-    port: program.args[0]
+    port: program.args[0],
+    report: program.report
 }
 
 logger.debug("hey dev with options: ");

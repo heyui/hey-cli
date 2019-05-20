@@ -77,6 +77,8 @@ function getConfig(args, isDebug, type) {
     logger.warn('No webpack config!');
   }
 
+  conf.report = args && args.report
+
   conf.root = conf.dist = conf.dist || conf.root;
   conf.webpack.root = conf.dist || conf.root;
   conf.webpack.compress = conf.webpack.compress === false ? false : true;

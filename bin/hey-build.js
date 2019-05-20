@@ -12,6 +12,7 @@ program
   .usage('[options]')
   .option('-C, --clean', 'clean before a new build')
   .option('-f, --file', 'define the config file')
+  .option('-r, --report', 'Visualize size of webpack output files with an interactive zoomable treemap.')
   .on('-h', printHelp)
   .on('--help', printHelp)
   .parse(process.argv);
@@ -28,6 +29,7 @@ var args = {
   clean: !!program.clean,
   uglify: !!program.uglify,
   file: program.args[0],
+  report: !!program.report
 }
 
 logger.debug("hey build with options: ");
