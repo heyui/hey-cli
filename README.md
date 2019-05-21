@@ -48,22 +48,8 @@ module.exports = {
       "./*.html": {
         // Load js file by default, and html automatically references. 
         //If not configured, the same js file as the html file name is automatically
-        "entry":"./src/index.js", 
-        "commons": [
-          "common"
-        ]
+        "entry":"./src/index.js"
       }
-    },
-
-    //public package definition
-    "commonTrunk": {
-      "common": [
-        "jquery",
-        "vue",
-        "vuex",
-        "manba",
-        "jsoneditor"
-      ]
     },
 
     //define resolve, https://webpack.js.org/configuration/resolve/
@@ -131,12 +117,8 @@ Specific use, please refer to [webpack](https://webpack.js.org/) document.
     "publicPath": "/",
     "output": {
       "./*.html": {
-        "entry":"./src/app",
-        "common":["common"]
+        "entry":"./src/app"
       }
-    },
-    "commonTrunk": {
-      "common":["vue","vue-router"]
     },
     "global": {
       "Vue": "vue"
