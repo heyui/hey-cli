@@ -103,7 +103,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
       ]
     },
     mode: webpackConfig.mode,
-    devtool: (isDebug ? '#eval' : (webpackConfig.sourceMap ? 'source-map' : false)),
+    devtool: (isDebug ? 'inline-source-map' : (webpackConfig.sourceMap ? 'source-map' : false)),
     plugins: [
       new VueLoaderPlugin(),
     ],
@@ -191,7 +191,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 };
 
 function initOutputHtmlPlugins(genWebpack, webpackConfig, config, isDebug) {
-  let entrys = {};
+  let entrys = {'babel-polyfill': 'babel-polyfill'};
 
   if (webpackConfig.output) {
     for (let key in webpackConfig.output) {
@@ -212,7 +212,7 @@ function initOutputHtmlPlugins(genWebpack, webpackConfig, config, isDebug) {
         var plugin_obj = {
           template: name,
           filename: file,
-          chunks: [entry],
+          chunks: ['babel-polyfill', entry],
         };
 
         if (!isDebug) {
