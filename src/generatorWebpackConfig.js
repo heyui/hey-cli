@@ -191,7 +191,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 };
 
 function initOutputHtmlPlugins(genWebpack, webpackConfig, config, isDebug) {
-  let entrys = {'babel-polyfill': 'babel-polyfill'};
+  let entrys = {};
 
   if (webpackConfig.output) {
     for (let key in webpackConfig.output) {
@@ -207,12 +207,11 @@ function initOutputHtmlPlugins(genWebpack, webpackConfig, config, isDebug) {
         }
         entrys[entry] = entry;
 
-
         let name = './' + file;
         var plugin_obj = {
           template: name,
           filename: file,
-          chunks: ['babel-polyfill', entry],
+          chunks: [entry],
         };
 
         if (!isDebug) {
