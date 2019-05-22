@@ -67,6 +67,7 @@ module.exports = {
     logger.debug('webpack dev server start with config: ');
     serverCfg.disableHostCheck = true;
     serverCfg.compress = true;
+    serverCfg.publicPath = webpackConfig.publicPath;
     var isOpened = false;
     compiler.apply(new ProgressPlugin(function(percentage, msg, msg2, msg3, msg4) {
       if(percentage == 1 && !isOpened && config.openBrowser) {

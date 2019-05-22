@@ -90,15 +90,15 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
         '@': path.join(process.cwd(), 'src'),
       },
       modules: [
-        path.join(process.cwd(), 'node_modules'),
         path.join(__dirname, "..", 'node_modules'),
+        path.join(process.cwd(), 'node_modules'),
         path.join(paths.join(path.sep), 'node_modules')
       ],
     },
     resolveLoader: {
       modules: [
-        path.join(process.cwd(), 'node_modules'),
         path.join(__dirname, "..", 'node_modules'),
+        path.join(process.cwd(), 'node_modules'),
         path.join(paths.join(path.sep), 'node_modules')
       ]
     },

@@ -1,6 +1,6 @@
 {
   "name": "hey-cli",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "webpack脚手架，hot-dev-server，build",
   "keywords": [
     "webpack",
@@ -26,13 +26,16 @@
   "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-syntax-jsx": "^7.2.0",
     "@babel/plugin-transform-async-to-generator": "^7.4.4",
     "@babel/plugin-transform-flow-strip-types": "^7.4.4",
     "@babel/plugin-transform-modules-commonjs": "^7.4.4",
+    "@babel/plugin-transform-object-assign": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/plugin-transform-spread": "^7.2.2",
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.4.4",
@@ -45,7 +48,7 @@
     "colorful": "^2.1.0",
     "commander": "^2.20.0",
     "concat-stream": "^2.0.0",
-    "core-js": "^2.6.5",
+    "core-js": "^2.6.7",
     "cross-spawn": "^6.0.5",
     "css-loader": "^2.1.1",
     "directory-named-webpack-plugin": "^4.0.1",
@@ -91,7 +94,7 @@
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.30.0",
     "webpack-bundle-analyzer": "^3.3.2",
-    "webpack-dev-server": "^3.3.1"
+    "webpack-dev-server": "^3.4.1"
   },
   "engines": {
     "node": ">= 4.0.0",
