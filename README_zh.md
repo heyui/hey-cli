@@ -183,12 +183,22 @@ hey build
 # 使用自定义的配置文件执行
 hey build -f index.esm.js
 ```
-## 参数
 
-``` javascript
-//识别是开发环境，还是部署环境
-const debug = process.env.NODE_ENV == 'development'; //production
+## 执行分析
+
+You can generate analyze.
+
+``` sh
+hey dev -r
+# or
+hey dev --report
+
+# after hey build
+hey report
+# or
+hey report -p port -f dist/stat.json
 ```
+![analyze](analyze.png)
 
 ## 生成模板
 根据已有的模板生成项目
@@ -208,15 +218,3 @@ hey init <project-name>
 
 具体项目请参考[hey-cli-template](https://github.com/heyui/hey-cli-template)。
 
-## 打包结果分析
-
-你可以使用webpack工具生成分析结果.
-
-``` sh
-npm install -g webpack-bundle-analyzer
-
-// 项目文件夹
-hey build
-webpack-bundle-analyzer dist/stat.json
-
-```

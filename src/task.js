@@ -1,14 +1,16 @@
 'use strict';
-var generatorConfig = require('./config');
-var logger = require('./logger');
-var webpack = require('webpack');
-var glob = require('glob');
-var fs = require('fs-extra');
-var fss = require("fs");
-var rimraf = require('rimraf');
-var chalk = require('chalk');
-var open = require('open');
-var utils = require('./util/utils');
+const generatorConfig = require('./config');
+const logger = require('./logger');
+const webpack = require('webpack');
+const glob = require('glob');
+const fs = require('fs-extra');
+const fss = require("fs");
+const rimraf = require('rimraf');
+const chalk = require('chalk');
+const open = require('open');
+const utils = require('./util/utils');
+const path = require('path');
+const BundleAnalyzer = require('webpack-bundle-analyzer').start;
 
 module.exports = {
   /**
@@ -77,8 +79,14 @@ module.exports = {
       logger.info('');
       logger.info('  - Local: ' + chalk.bold.blue(`http://localhost:${config.port}`));
       logger.info('  - Network: ' + chalk.bold.blue(`http://${utils.getLocalIP()}:${config.port}`));
+      if (config.report) {
+        logger.info('  - Analyzer: ' + chalk.bold.blue(`http://localhost:${config.analyzerPort}`));
+      }
       logger.info('');
-      logger.info('For more information, see https://github.com/heyui/hey-cli');
+      if (!config.report) {
+        logger.info('Use webpack-bundle-analyzer: '+ chalk.bold.blue('hey dev -r'));
+      }
+      logger.info('For more information, see ' + chalk.bold.blue('https://github.com/heyui/hey-cli'));
     })
 
     new WebpackDevServer(compiler, serverCfg).listen(config.port, '::', (err) => {
@@ -99,9 +107,9 @@ module.exports = {
     if(config == null || config === false) return;
     var webpackPack = this.webpackPack;
     if (args.clean || config.clean) {
-      logger.info('start remove ' + config.root + ' folder. ');
+      logger.info('Start remove ' + config.root + ' folder. ');
       rimraf(config.root, () => {
-        logger.info('build cleaned, removed ' + config.root + ' folder. ');
+        logger.info('Build cleaned, removed ' + config.root + ' folder. ');
         webpackPack(config, webpackConfig, args);
       })
     } else {
@@ -109,7 +117,7 @@ module.exports = {
     }
   },
   webpackPack(config, webpackConfig, args) {
-    logger.info('start build project... ');
+    logger.info('Start build project... ');
     var compiler = webpack(webpackConfig);
     var logError = global.console.error;
     global.console.error = function(){}
@@ -132,19 +140,29 @@ module.exports = {
         }
       });
 
-      logger.info('build complete. ');
+      logger.info('Compiled successfully');
       if (config.copy && config.copy.length > 0) {
-        logger.info('start copying. ');
+        logger.info('Start copying. ');
         config.copy.forEach((key) => {
           let files = glob.sync(key);
           files.forEach((file) => {
             fs.copySync(file, `${config.root}/${file}`);
           })
-          logger.info('Copy complete. ');
         })
+        logger.info('Copy complete. ');
       }
       logger.info('Build successfully. ');
+      if (!config.report) {
+        logger.info('Use webpack-bundle-analyzer: '+ chalk.bold.blue('hey report'));
+      }
+      logger.info('For more information, see ' + chalk.bold.blue('https://github.com/heyui/hey-cli'));
 
     });
+  },
+  report(args) {
+    let stats = require(path.join(process.cwd(), args.file));
+    BundleAnalyzer(stats, {
+      port: args.port
+    })
   }
 }

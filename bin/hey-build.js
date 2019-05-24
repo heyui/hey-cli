@@ -11,7 +11,7 @@ var exec = require('child_process').exec;
 program
   .usage('[options]')
   .option('-C, --clean', 'clean before a new build')
-  .option('-f, --file', 'define the config file')
+  .option('-f, --file [value]', 'define the config file')
   .option('-r, --report', 'Visualize size of webpack output files with an interactive zoomable treemap.')
   .on('-h', printHelp)
   .on('--help', printHelp)
@@ -28,19 +28,10 @@ var args = {
   sourcemap: !!program.sourcemap,
   clean: !!program.clean,
   uglify: !!program.uglify,
-  file: program.args[0],
+  file: program.file,
   report: !!program.report
 }
 
 logger.debug("hey build with options: ");
 
-// if (program.clean) {
-// var cleanScript = path.join(__dirname, '/hey-clean.js');
-// spawn(cleanScript, {
-//     stdio: 'inherit'
-// }).on('close', (code) => {
-//     task.build(args);
-// });
-// } else {
 task.build(args);
-// }

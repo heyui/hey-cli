@@ -190,6 +190,24 @@ hey build
 hey build -f index.esm.js
 ```
 
+## Analyze
+
+You can generate analyze.
+
+``` sh
+hey dev -r
+# or
+hey dev --report
+
+# after hey build
+hey report
+# or
+hey report -p port -f dist/stat.json
+
+```
+![analyze](analyze.png)
+
+
 ## Parameter
 
 ``` javascript
@@ -215,16 +233,3 @@ The current template
 - iViewUI: iViewUI project
 
 For specific projects, please refer to [hey-cli-template](https://github.com/heyui/hey-cli-template)。
-
-## Analyze
-
-You can use webpack plugin generate analyze.
-
-``` sh
-npm install -g webpack-bundle-analyzer
-
-// project folder
-hey build
-webpack-bundle-analyzer dist/stat.json
-
-```

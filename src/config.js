@@ -5,14 +5,14 @@ var path = require('path');
 var generatorWebpackConfig = require('./generatorWebpackConfig');
 
 function getConfig(args, isDebug, type) {
-  var conf = null;
+  var config = null;
 
   var json = {};
   var source = false;
   var error = null;
   if(args.file) {
     try {
-      conf = require(path.join(process.cwd(), args.file));
+      config = require(path.join(process.cwd(), args.file));
       source = true;
     } catch (ex) {
       error = ex;
@@ -26,7 +26,7 @@ function getConfig(args, isDebug, type) {
 
   if (source == false) {
     try {
-      conf = require(path.join(process.cwd(), 'hey.js'));
+      config = require(path.join(process.cwd(), 'hey.js'));
       source = true;
     } catch (ex) {
       error = ex;
@@ -36,7 +36,7 @@ function getConfig(args, isDebug, type) {
 
   if (source == false) {
     try {
-      conf = require(path.join(process.cwd(), 'hey.conf.js'));
+      config = require(path.join(process.cwd(), 'hey.conf.js'));
       source = true;
     } catch (ex) {
       error = ex;
@@ -48,7 +48,7 @@ function getConfig(args, isDebug, type) {
     try {
       json = require(path.join(process.cwd(), 'package.json'));
       if(json.hey){
-        conf = json.hey;
+        config = json.hey;
         source = true;
       }
     } catch (ex) {
@@ -58,39 +58,40 @@ function getConfig(args, isDebug, type) {
   }
 
   if (!source) {
-    logger.error("Can't find "+ (args.file ? (args.file+" or"):'') +" hey.conf.js or package.json 'hey' param. ");
+    logger.error("Can't find "+ (args.file ? (args.file+" or"):'') +" hey.config.js or package.json 'hey' param. ");
     return false;
   }
 
   var defaultConfig = require('./default/package.default.js');
-  conf = Utils.extend(true, {}, defaultConfig, conf);
+  config = Utils.extend(true, {}, defaultConfig, config);
   //端口号从命令中获取
   if (args && args.port) {
     try {
-      conf.port = parseInt(args.port);
+      config.port = parseInt(args.port);
     } catch (err) {
       logger.warn('Ignore passed error port! ');
     }
   }
 
-  if (conf.webpack == undefined) {
+  if (config.webpack == undefined) {
     logger.warn('No webpack config!');
   }
 
-  conf.report = args && args.report
+  config.report = args && args.report
 
-  conf.root = conf.dist = conf.dist || conf.root;
-  conf.webpack.root = conf.dist || conf.root;
-  conf.webpack.compress = conf.webpack.compress === false ? false : true;
-  conf.webpack.mode = conf.webpack.mode || type;
+  config.root = config.dist = config.dist || config.root;
+  config.webpack.root = config.dist || config.root;
+  config.webpack.compress = config.webpack.compress === false ? false : true;
+  config.webpack.mode = config.webpack.mode || type;
 
-  var timestamp = (!isDebug && conf.timestamp) ? (new Date().getTime()) : "";
-  conf.staticPath = "static" + timestamp + "/";
-  conf.jsPath = conf.staticPath + "js/";
-  conf.cssPath = conf.staticPath + "css/";
-  conf.hashString = isDebug ? '' : '.[hash:7]';
+  var timestamp = (!isDebug && config.timestamp) ? (new Date().getTime()) : "";
+  config.staticPath = "static" + timestamp + "/";
+  config.jsPath = config.staticPath + "js/";
+  config.cssPath = config.staticPath + "css/";
+  config.hashString = isDebug ? '' : '.[hash:7]';
+  config.analyzerPort = config.port + 100;
 
-  return conf;
+  return config;
 }
 
 module.exports = function (type, args) {

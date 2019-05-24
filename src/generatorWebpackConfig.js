@@ -115,7 +115,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
   if(config.report) {
     genWebpackConfig.plugins.push(new BundleAnalyzerPlugin({
-      analyzerPort: `${config.port+100}`
+      analyzerPort: `${config.analyzerPort}`
     }))
   }
 

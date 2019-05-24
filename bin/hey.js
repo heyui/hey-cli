@@ -23,7 +23,8 @@ var args = process.argv.slice(3);
 const aliases = {
   "i": "init",
   "b": "build",
-  "d": "dev"
+  "d": "dev",
+  "r": "report",
 }
 
 if (aliases[subcmd]) {
@@ -43,6 +44,7 @@ function printHelp() {
   console.log('    init           generate the dir structure');
   console.log('    dev            develop with a dev server');
   console.log('    build          build a package');
+  console.log('    report         webpack-bundle-analyzer');
   console.log();
 }
 

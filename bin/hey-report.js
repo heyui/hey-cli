@@ -4,12 +4,11 @@ require('colorful').colorful();
 
 var program = require('commander');
 var task = require('../src/task');
-var logger = require('../src/logger');
 
 program
     .usage('[options]')
     .option('-p, --port [value]', 'specify the port when dev server run')
-    .option('-r, --report', 'Visualize size of webpack output files with an interactive zoomable treemap.')
+    .option('-f, --file [value]', 'define the config file')
     .on('-h', printHelp)
     .on('--help', printHelp)
     .parse(process.argv);
@@ -17,13 +16,13 @@ program
 function printHelp() {
     console.log('  Examples:'.to.bold.green.color);
     console.log();
-    console.log('    hey dev -p 9001    ');
+    console.log('    hey report -p 9001 -f dist/stat.json    ');
     console.log();
 }
 
 var args = {
-    port: program.port,
-    report: program.report
+    port: program.port ? parseInt(program.port) : 8888,
+    file: program.file || 'dist/stat.json'
 }
 
-task.dev(args);
+task.report(args);
