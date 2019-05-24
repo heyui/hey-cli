@@ -36,15 +36,26 @@ module.exports = {
       watchOptions: {
         poll: 1000
       },
-      stats: {
-        colors: true
-      },
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Content-Type,Content-Length, Authorization, Accept,X-Requested-With",
         "Access-Control-Allow-Methods": "PUT,POST,GET,DELETE,OPTIONS",
       },
+      disableHostCheck: true,
+      compress: true,
+      publicPath: webpackConfig.output.publicPath,
+      noInfo: true,
+      stats: {
+        assets: false,
+        colors: true,
+        builtAt: false,
+        modules: false,
+        errors: true,
+        entrypoints: false,
+        errorDetails: true,
+      }
     }
+
     var devServer = config.webpack.devServer;
     if (devServer) {
       for (var key in devServer) {
@@ -66,10 +77,6 @@ module.exports = {
     }
 
     logger.debug('webpack dev server start with config: ');
-    serverCfg.disableHostCheck = true;
-    serverCfg.compress = true;
-    serverCfg.publicPath = webpackConfig.output.publicPath;
-    serverCfg.noInfo = true
     let isDone = false;
     compiler.hooks.done.tap('complete', (stats) => {
       if(isDone) {
