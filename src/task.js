@@ -70,7 +70,12 @@ module.exports = {
     serverCfg.compress = true;
     serverCfg.publicPath = webpackConfig.output.publicPath;
     serverCfg.noInfo = true
+    let isDone = false;
     compiler.hooks.done.tap('complete', (stats) => {
+      if(isDone) {
+        return;
+      }
+      isDone = true;
       if (config.openBrowser) {
         open("http://localhost:"+config.port);
       }
