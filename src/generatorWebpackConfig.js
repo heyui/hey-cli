@@ -34,7 +34,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     output: {
       path: `${process.cwd()}/${webpackConfig.root}/`,
       filename: `${config.jsPath}[name]${config.hashString}.js`,
-      chunkFilename: `${config.jsPath}[id]${config.hashString}.js`,
+      chunkFilename: `${config.jsPath}[name]${config.hashString}.js`,
       publicPath: isDebug ? '/':webpackConfig.publicPath
     },
     optimization: {
@@ -109,7 +109,21 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
   if (!webpackConfig.umd) {
     genWebpackConfig.optimization.splitChunks = {
       name: true,
-      chunks: 'all'
+      // chunks: 'all',
+      // cacheGroups: {
+      //   common: {
+      //     name: 'common',
+      //     chunks: 'initial',
+      //     minChunks: 2
+      //   },
+      //   vueStyles: {
+      //     name: 'vue',
+      //     test(m) {
+      //       return m.type == 'css/mini-extract';
+      //     },
+      //     chunks: 'initial'
+      //   }
+      // }
     };
   }
 
@@ -159,7 +173,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
       }),
       new MiniCssExtractPlugin({
         filename: `${config.cssPath}[name]${config.hashString}.css`,
-        chunkFilename: `${config.cssPath}[id]${config.hashString}.css`
+        chunkFilename: `${config.cssPath}[name]${config.hashString}.css`
       }),
       new webpack.optimize.OccurrenceOrderPlugin()
     );
