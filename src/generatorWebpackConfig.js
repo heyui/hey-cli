@@ -14,6 +14,8 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const TerserJSPlugin = require("terser-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+
 
 const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
@@ -21,16 +23,10 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
 
   if (webpackConfig.globalVars) {
     styleLoaderUtils.updateGlobalVars(webpackConfig.globalVars);
-    if(isDebug){
-      logger.info(chalk.green("提醒：修改"+webpackConfig.globalVars+"文件后需要重启服务"));
-    }
   }
 
   if (webpackConfig.globalJsonVars) {
     styleLoaderUtils.updateGlobalJsonVars(webpackConfig.globalJsonVars);
-    if(isDebug){
-      logger.info(chalk.green("提醒：修改参数 globalJsonVars 后需要重启服务"));
-    }
   }
 
   var genWebpackConfig = {
@@ -106,6 +102,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
     devtool: (isDebug ? 'inline-source-map' : (webpackConfig.sourceMap ? 'source-map' : false)),
     plugins: [
       new VueLoaderPlugin(),
+      new ProgressBarPlugin()
     ],
   };
 

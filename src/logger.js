@@ -1,4 +1,6 @@
-var log4js = require('log4js');
+
+const chalk = require('chalk');
+const log4js = require('log4js');
 log4js.configure({
   appenders: {
     out: { type: 'stdout', layout: {

@@ -6,10 +6,9 @@ var glob = require('glob');
 var fs = require('fs-extra');
 var fss = require("fs");
 var rimraf = require('rimraf');
-var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 var chalk = require('chalk');
 var open = require('open');
-
+var utils = require('./util/utils');
 
 module.exports = {
   /**
@@ -67,23 +66,26 @@ module.exports = {
     logger.debug('webpack dev server start with config: ');
     serverCfg.disableHostCheck = true;
     serverCfg.compress = true;
-    serverCfg.publicPath = webpackConfig.publicPath;
-    var isOpened = false;
-    compiler.apply(new ProgressPlugin(function(percentage, msg, msg2, msg3, msg4) {
-      if(percentage == 1 && !isOpened && config.openBrowser) {
+    serverCfg.publicPath = webpackConfig.output.publicPath;
+    serverCfg.noInfo = true
+    compiler.hooks.done.tap('complete', (stats) => {
+      if (config.openBrowser) {
         open("http://localhost:"+config.port);
-        isOpened = true;
       }
-    }));
+
+      logger.info('Compiled successfully');
+      logger.info('');
+      logger.info('  - Local: ' + chalk.bold.blue(`http://localhost:${config.port}`));
+      logger.info('  - Network: ' + chalk.bold.blue(`http://${utils.getLocalIP()}:${config.port}`));
+      logger.info('');
+      logger.info('For more information, see https://github.com/heyui/hey-cli');
+    })
+
     new WebpackDevServer(compiler, serverCfg).listen(config.port, '::', (err) => {
       if (err) {
         logger.error(err);
         process.exit(1);
       }
-
-      logger.info('----------------------------------');
-      logger.info('Starting server on ' + chalk.bold.red("http://localhost:"+config.port));
-      logger.info('----------------------------------');
     });
   },
   /**
@@ -109,20 +111,8 @@ module.exports = {
   webpackPack(config, webpackConfig, args) {
     logger.info('start build project... ');
     var compiler = webpack(webpackConfig);
-
-    var ProgressBar = require('progress');
-    var bar = new ProgressBar('  building [:bar] :percent :etas', { 
-      complete: '=',
-      incomplete: ' ',
-      total: 100
-    });
     var logError = global.console.error;
     global.console.error = function(){}
-    
-    compiler.apply(new ProgressPlugin(function(percentage, msg, msg2, msg3, msg4) {
-      // logger.info((percentage * 100) + '%', msg, msg2||"");
-      bar.update(percentage);
-    }));
     
     compiler.run((err, stats) => {
       global.console.error = logError;
@@ -136,14 +126,11 @@ module.exports = {
       if (jsonStats.warnings.length > 0) {
         logger.warn(jsonStats.warnings);
       }
-      // if (args.profile) {
-        fss.writeFile(webpackConfig.output.path + '/stat.json', JSON.stringify(jsonStats),  function(err) {
-          if (err) {
-              return console.error(err);
-          }
-          console.log("stat文件生成成功！");
-       });
-      // }
+      fss.writeFile(webpackConfig.output.path + '/stat.json', JSON.stringify(jsonStats),  function(err) {
+        if (err) {
+            return console.error(err);
+        }
+      });
 
       logger.info('build complete. ');
       if (config.copy && config.copy.length > 0) {
@@ -153,10 +140,10 @@ module.exports = {
           files.forEach((file) => {
             fs.copySync(file, `${config.root}/${file}`);
           })
-          logger.info('copy complete. ');
+          logger.info('Copy complete. ');
         })
       }
-      logger.info('build successfully. ');
+      logger.info('Build successfully. ');
 
     });
   }
