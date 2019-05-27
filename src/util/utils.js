@@ -76,13 +76,16 @@ module.exports={
     return target;
   },
   getLocalIP () {
-    const en0=os.networkInterfaces().en0;
-    let localhost=null;
-    for ( let i=0; i<en0.length; i++ ) {
-      if ( en0[ i ].family=='IPv4' ) {
-        localhost=en0[ i ].address;
-      }
+    const interfaces = os.networkInterfaces();
+    for (const devName in interfaces) {
+      const iface = interfaces[devName];
+        for (let i = 0; i < iface.length; i++) {
+          const alias = iface[i];
+          if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+            return alias.address;
+          }
+        }
     }
-    return localhost;
+    return null;
   },
 }

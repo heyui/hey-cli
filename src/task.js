@@ -84,22 +84,30 @@ module.exports = {
         return;
       }
       isDone = true;
-      if (config.openBrowser) {
-        open("http://localhost:"+config.port);
-      }
+      try {
+        if (config.openBrowser) {
+          open("http://localhost:"+config.port);
+        }
 
-      logger.info('Compiled successfully');
-      logger.info('');
-      logger.info('  - Local: ' + chalk.bold.blue(`http://localhost:${config.port}`));
-      logger.info('  - Network: ' + chalk.bold.blue(`http://${utils.getLocalIP()}:${config.port}`));
-      if (config.report) {
-        logger.info('  - Analyzer: ' + chalk.bold.blue(`http://localhost:${config.analyzerPort}`));
+        logger.info('Compiled successfully');
+        logger.info('');
+        logger.info('  - Local: ' + chalk.bold.blue(`http://localhost:${config.port}`));
+        const ip = utils.getLocalIP();
+        if(ip) {
+          logger.info('  - Network: ' + chalk.bold.blue(`http://${ip}:${config.port}`));
+        }
+        if (config.report) {
+          logger.info('  - Analyzer: ' + chalk.bold.blue(`http://localhost:${config.analyzerPort}`));
+        }
+        logger.info('');
+        if (!config.report) {
+          logger.info('Use webpack-bundle-analyzer: '+ chalk.bold.blue('hey dev -r'));
+        }
+        logger.info('For more information, see ' + chalk.bold.blue('https://github.com/heyui/hey-cli'));
+      } catch (e) {
+        logger.error(e);
+        return;
       }
-      logger.info('');
-      if (!config.report) {
-        logger.info('Use webpack-bundle-analyzer: '+ chalk.bold.blue('hey dev -r'));
-      }
-      logger.info('For more information, see ' + chalk.bold.blue('https://github.com/heyui/hey-cli'));
     })
 
     new WebpackDevServer(compiler, serverCfg).listen(config.port, '::', (err) => {
