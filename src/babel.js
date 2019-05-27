@@ -1,3 +1,5 @@
+const utils = require('./util/utils');
+
 module.exports = (conf) => {
   let babelConfig = {};
   babelConfig.presets = [[require.resolve('@babel/preset-env'), {
@@ -15,7 +17,14 @@ module.exports = (conf) => {
   }
 
   if (conf.webpack.pluginImport) {
-    babelConfig.plugins.push([require.resolve('babel-plugin-import'), conf.webpack.pluginImport]);
+    let pluginImport = conf.webpack.pluginImport;
+    if(utils.isArray(pluginImport)) {
+      for(let p of pluginImport) {
+        babelConfig.plugins.push([require.resolve('babel-plugin-import'), p, p.libraryName]);
+      }
+    } else {
+      babelConfig.plugins.push([require.resolve('babel-plugin-import'), pluginImport, pluginImport.libraryName]);
+    }
   }
 
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-async-to-generator')]);

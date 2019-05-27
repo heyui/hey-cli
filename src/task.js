@@ -28,6 +28,7 @@ module.exports = {
       var compiler = webpack(webpackConfig);
     } catch (e) {
       logger.error(e);
+      return;
     }
 
     var WebpackDevServer = require('webpack-dev-server');
@@ -138,6 +139,7 @@ module.exports = {
       global.console.error = logError;
       if (err) {
         logger.error(err);
+        return;
       }
       var jsonStats = stats.toJson();
       if (jsonStats.errors.length > 0) {
