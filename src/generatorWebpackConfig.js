@@ -99,7 +99,7 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
       ]
     },
     mode: webpackConfig.mode,
-    devtool: (isDebug ? 'inline-source-map' : (webpackConfig.sourceMap ? 'source-map' : false)),
+    devtool: (isDebug ? 'eval' : (webpackConfig.sourceMap ? 'source-map' : false)),
     plugins: [
       new VueLoaderPlugin(),
       new ProgressBarPlugin()
