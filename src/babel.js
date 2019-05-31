@@ -4,7 +4,7 @@ module.exports = (conf) => {
   let babelConfig = {};
   babelConfig.presets = [[require.resolve('@babel/preset-env'), {
     useBuiltIns: 'entry',
-    corejs: 2,
+    corejs: 3,
     targets: "> 0.25%, not dead, not ie <= 8"
   }]];
   babelConfig.plugins = [
@@ -27,14 +27,15 @@ module.exports = (conf) => {
     }
   }
 
+  babelConfig.plugins.push([require.resolve('@babel/plugin-transform-spread'), { loose: false }]);
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-async-to-generator')]);
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-flow-strip-types')]);
   babelConfig.plugins.push([require.resolve('@babel/plugin-proposal-object-rest-spread'), { "loose": true, "useBuiltIns": true }]);
-  babelConfig.plugins.push([require.resolve('@babel/plugin-transform-modules-commonjs'), { "loose": true}]);
+  babelConfig.plugins.push([require.resolve('@babel/plugin-transform-modules-commonjs')]);
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-object-assign')]);
-  babelConfig.plugins.push([require.resolve('@babel/plugin-transform-spread'), {
-    loose: true
-  }]);
+  babelConfig.plugins.push([require.resolve('@babel/plugin-syntax-object-rest-spread')]);
+  babelConfig.plugins.push([require.resolve('babel-plugin-transform-es2015-spread'), {loose: true}]);
+  
 
   return babelConfig;
 };
