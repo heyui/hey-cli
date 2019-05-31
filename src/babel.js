@@ -29,8 +29,8 @@ module.exports = (conf) => {
 
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-async-to-generator')]);
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-flow-strip-types')]);
-  babelConfig.plugins.push([require.resolve('@babel/plugin-proposal-object-rest-spread')]);
-  babelConfig.plugins.push([require.resolve('@babel/plugin-transform-modules-commonjs')]);
+  babelConfig.plugins.push([require.resolve('@babel/plugin-proposal-object-rest-spread'), { "loose": true, "useBuiltIns": true }]);
+  babelConfig.plugins.push([require.resolve('@babel/plugin-transform-modules-commonjs'), { "loose": true}]);
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-object-assign')]);
   babelConfig.plugins.push([require.resolve('@babel/plugin-transform-spread'), {
     loose: true
