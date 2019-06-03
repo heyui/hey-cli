@@ -42,6 +42,7 @@ module.exports = {
         "Access-Control-Allow-Headers": "Content-Type,Content-Length, Authorization, Accept,X-Requested-With",
         "Access-Control-Allow-Methods": "PUT,POST,GET,DELETE,OPTIONS",
       },
+      host: '0.0.0.0',
       disableHostCheck: true,
       compress: true,
       publicPath: webpackConfig.output.publicPath,
