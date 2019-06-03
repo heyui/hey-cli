@@ -4,7 +4,7 @@ module.exports = (conf) => {
   let babelConfig = {};
   babelConfig.presets = [[require.resolve('@babel/preset-env'), {
     useBuiltIns: 'entry',
-    corejs: 3,
+    corejs: 2,
     targets: "> 0.25%, not dead, not ie <= 8"
   }]];
   babelConfig.plugins = [
