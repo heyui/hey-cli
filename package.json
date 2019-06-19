@@ -1,6 +1,6 @@
 {
   "name": "hey-cli",
-  "version": "2.5.12",
+  "version": "2.5.13",
   "description": "webpack脚手架，hot-dev-server，build",
   "keywords": [
     "webpack",
@@ -98,7 +98,7 @@
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.30.0",
     "webpack-bundle-analyzer": "^3.3.2",
-    "webpack-dev-server": "^3.4.1"
+    "webpack-dev-server": "^3.7.2"
   },
   "engines": {
     "node": ">= 4.0.0",
