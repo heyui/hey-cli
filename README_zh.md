@@ -31,6 +31,7 @@ module.exports = {
   "clean": true, //打包之前清空dist目录
   "react": true, //支持react项目
   "openBrowser": true, // 自动打开浏览器
+  "stat": true, // 是否生成stat.json
 	//webpack相关配置    
   "webpack": {
     "console": false, //打包压缩是否保留console，默认为false

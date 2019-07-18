@@ -8,6 +8,7 @@ module.exports = {
   console: false,
   clean: true,
   openBrowser: true,
+  stat: true,
   webpack: {
     sourceMap: false,
     publicPath: "/",

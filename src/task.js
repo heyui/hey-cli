@@ -157,11 +157,13 @@ module.exports = {
       if (jsonStats.warnings.length > 0) {
         logger.warn(jsonStats.warnings);
       }
-      fss.writeFile(webpackConfig.output.path + '/stat.json', JSON.stringify(jsonStats),  function(err) {
-        if (err) {
+      if(config.stat) {
+        fss.writeFile(webpackConfig.output.path + '/stat.json', JSON.stringify(jsonStats),  function(err) {
+          if (err) {
             return console.error(err);
-        }
-      });
+          }
+        });
+      }
 
       logger.info('Compiled successfully');
       if (config.copy && config.copy.length > 0) {
