@@ -62,6 +62,12 @@ const initDefaultWebpackConf = function (webpackConfig, isDebug, config) {
           loaders: styleLoaderUtils.cssLoaders({ from: 'vue'})
         }
       }, {
+        test: /\.tsx?$/,
+        use: {
+            loader: 'ts-loader'
+        }
+      },
+      {
         test: /\.html?$/,
         loader: 'html-loader',
         options: {
