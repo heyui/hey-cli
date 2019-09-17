@@ -212,6 +212,7 @@ hey init <project-name>
 
 - Simple: 基础的ES6项目
 - HeyUI: HeyUI项目
+- HeyUI: HeyAdmin项目
 - Vue: 基础的Vue项目
 - React: 基础的React项目
 - ElementUI: Element项目
