@@ -228,6 +228,7 @@ The current template
 
 - Simple: Base ES6 project
 - HeyUI: HeyUI project
+- HeyAdmin: HeyAdmin project
 - Vue: Base Vue project
 - React: Base React project
 - ElementUI: Element project

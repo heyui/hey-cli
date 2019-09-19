@@ -21,6 +21,7 @@ program.on('--help', function () {
   console.log('    # create a new project with a template')
   console.log('    - template: Simple');
   console.log('    - template: HeyUI');
+  console.log('    - template: HeyAdmin');
   console.log('    - template: Vue');
   console.log('    - template: React');
   console.log('    - template: ElementUI');
@@ -80,6 +81,7 @@ if(!gitUrl) {
     choices: [
       'Simple',
       'HeyUI',
+      'HeyAdmin',
       'Vue',
       'React',
       'ElementUI',
