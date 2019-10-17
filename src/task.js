@@ -152,10 +152,12 @@ module.exports = {
       }
       var jsonStats = stats.toJson();
       if (jsonStats.errors.length > 0) {
-        logger.error(jsonStats.errors);
+        //logger.error(jsonStats.errors);
+        jsonStats.errors.forEach((item) => logger.error(item));
       }
       if (jsonStats.warnings.length > 0) {
-        logger.warn(jsonStats.warnings);
+        //logger.warn(jsonStats.warnings);
+        jsonStats.warnings.forEach((item) => logger.warn(item));
       }
       if(config.stat) {
         fss.writeFile(webpackConfig.output.path + '/stat.json', JSON.stringify(jsonStats),  function(err) {
