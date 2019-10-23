@@ -217,6 +217,7 @@ hey init <project-name>
 - React: 基础的React项目
 - ElementUI: Element项目
 - iViewUI: iViewUI项目
+- ViewUI: ViewUI项目
 
 具体项目请参考[hey-cli-template](https://github.com/heyui/hey-cli-template)。
 

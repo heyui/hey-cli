@@ -233,5 +233,6 @@ The current template
 - React: Base React project
 - ElementUI: Element project
 - iViewUI: iViewUI project
+- ViewUI: ViewUI project
 
 For specific projects, please refer to [hey-cli-template](https://github.com/heyui/hey-cli-template)。

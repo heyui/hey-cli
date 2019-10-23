@@ -26,6 +26,7 @@ program.on('--help', function () {
   console.log('    - template: React');
   console.log('    - template: ElementUI');
   console.log('    - template: iViewUI');
+  console.log('    - template: ViewUI');
   console.log()
   console.log('    # create a new project with github');
   console.log('    - hey init test heyui/hey-cli-template');
@@ -85,7 +86,8 @@ if(!gitUrl) {
       'Vue',
       'React',
       'ElementUI',
-      'iViewUI'
+      'iViewUI',
+      'ViewUI'
     ]
   });
   
