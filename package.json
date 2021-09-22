@@ -41,7 +41,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.4.4",
     "ajv": "^6.10.0",
-    "ansi-regex": "^2.1.1",
+    "ansi-regex": "^6.0.1",
     "autoprefixer": "^9.5.1",
     "babel-loader": "^8.0.5",
     "babel-plugin-import": "^1.11.0",
