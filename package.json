@@ -55,7 +55,7 @@
     "css-loader": "^2.1.1",
     "directory-named-webpack-plugin": "^4.0.1",
     "download-git-repo": "^1.1.0",
-    "ejs-loader": "^0.3.3",
+    "ejs-loader": "^0.5.0",
     "file-loader": "^3.0.1",
     "fs": "0.0.2",
     "fs-extra": "^7.0.1",
